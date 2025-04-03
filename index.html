@@ -3,33 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard - Infirmier(ère)</title>
+  <title>Espace Infirmier</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <h1>🩺 Dashboard Infirmier(ère)</h1>
+  <h1>🩺 Espace Infirmier</h1>
 
   <!-- Patient Info -->
   <section class="section">
     <h2>📋 Informations du patient</h2>
-    <div id="patientInfo">Chargement...</div>
+    <div id="patientInfo" class="patient-grid">
+      <!-- Dynamically loaded -->
+    </div>
   </section>
 
   <!-- Observation Section -->
-  <div class="flex-row">
-    <section class="section half">
-      <h2>🎙️ Observation Audio</h2>
-      <textarea id="observationInput" placeholder="Observation à partir de l'audio..."></textarea>
-      <div>
-        <button id="startObservationBtn" onclick="startRecording()">🎤 Démarrer</button>
-        <button onclick="stopRecording()">🛑 Arrêter et Transcrire</button>
-        <span id="observationStatus" class="status"></span>
-      </div>
-      <button onclick="submitObservation()">✅ Enregistrer l'observation</button>
-      <p id="obsMessage"></p>
-    </section>
-  </div>
+  <section class="section">
+    <h2>🗒️ Observation Infirmier</h2>
+    
+    <textarea id="observationInput" placeholder="Saisir ou dicter l'observation ici..."></textarea>
+    
+    <div>
+      <button id="startObservationBtn" onclick="startRecording()">🎤 Démarrer</button>
+      <button onclick="stopRecording()">🔴 Arrêter et Transcrire</button>
+      <span id="observationStatus" class="status"></span>
+    </div>
+    
+    <button onclick="submitObservation()">✅ Enregistrer l'observation</button>
+    <p id="obsMessage"></p>
+  </section>
 
   <script src="nurse-dashboard.js"></script>
 </body>
