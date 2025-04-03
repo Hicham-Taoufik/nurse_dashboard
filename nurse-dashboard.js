@@ -1,5 +1,5 @@
 const BASE_URL = 'https://workflows.aphelionxinnovations.com';
-const TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJndWlkIjoiZmJmMmI1ZjctZTc3ZS00ZGZmLWJlN2UtN2ZlOGVkZmViZmY1IiwiZmlyc3ROYW1lIjoiTW91c3NhIiwibGFzdE5hbWUiOiJTYWlkaSIsInVzZXJuYW1lIjoic2FpZGkiLCJlbWFpbCI6Im1vdXNzYS5zYWlkaS4wMUBnbXppbC5jb20iLCJwYXNzd29yZCI6ImFkbWluMTIzNCIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc0Mjk1MjMyNn0.1s_IWO-h-AKwkP0LIX8mcjdeLRwsRtgbqAchIJSRVEA'; // remplace avec ton vrai token
+const TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJndWlkIjoiZmJmMmI1ZjctZTc3ZS00ZGZmLWJlN2UtN2ZlOGVkZmViZmY1IiwiZmlyc3ROYW1lIjoiTW91c3NhIiwibGFzdE5hbWUiOiJTYWlkaSIsInVzZXJuYW1lIjoic2FpZGkiLCJlbWFpbCI6Im1vdXNzYS5zYWlkaS4wMUBnbXppbC5jb20iLCJwYXNzd29yZCI6ImFkbWluMTIzNCIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc0Mjk1MjMyNn0.1s_IWO-h-AKwkP0LIX8mcjdeLRwsRtgbqAchIJSRVEA';
 
 let currentIPP = null;
 let mediaRecorder;
@@ -15,7 +15,7 @@ window.onload = () => {
   }
 };
 
-// ✅ Chargement des infos du patient
+// ✅ 1. Load patient info
 function loadPatient(ipp) {
   fetch(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`, {
     headers: { Authorization: TOKEN }
@@ -37,12 +37,12 @@ function loadPatient(ipp) {
       `;
     })
     .catch(err => {
-      document.getElementById("patientInfo").innerHTML = "<p>❌ Erreur lors du chargement des données.</p>";
-      console.error(err);
+      console.error("Erreur:", err);
+      document.getElementById("patientInfo").innerHTML = "<p style='color:red;'>❌ Erreur lors du chargement des données.</p>";
     });
 }
 
-// ✅ Démarrer l'enregistrement
+// ✅ 2. Start recording
 function startRecording() {
   audioChunks = [];
   document.getElementById("observationStatus").innerText = "🎤 Enregistrement...";
@@ -67,7 +67,7 @@ function startRecording() {
   });
 }
 
-// ✅ Arrêter l'enregistrement
+// ✅ 3. Stop recording
 function stopRecording() {
   if (mediaRecorder && mediaRecorder.state === 'recording') {
     mediaRecorder.stop();
@@ -75,7 +75,7 @@ function stopRecording() {
   }
 }
 
-// ✅ Envoi du fichier audio à l'IA pour transcription
+// ✅ 4. Transcribe audio with AI
 function sendAudioToAI(blob) {
   const formData = new FormData();
   formData.append("audio", blob, "observation.webm");
@@ -105,7 +105,7 @@ function sendAudioToAI(blob) {
     });
 }
 
-// ✅ Envoi de l'observation
+// ✅ 5. Submit observation
 function submitObservation() {
   const observation = document.getElementById("observationInput").value.trim();
   if (!observation) {
