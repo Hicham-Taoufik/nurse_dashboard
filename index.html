@@ -7,32 +7,28 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <h1>🩺 Espace Infirmier</h1>
 
-  <!-- Patient Info -->
   <section class="section">
-    <h2>📋 Informations du patient</h2>
-    <div id="patientInfo" class="patient-grid">
-      <!-- Dynamically loaded -->
+    <h2>🗂️ Informations du patient</h2>
+    <div class="patient-grid" id="patientInfo">
+      <!-- JS will populate patient data -->
     </div>
   </section>
 
-  <!-- Observation Section -->
   <section class="section">
-    <h2>🗒️ Observation Infirmier</h2>
-    
+    <h2>📝 Observation Infirmier</h2>
     <textarea id="observationInput" placeholder="Saisir ou dicter l'observation ici..."></textarea>
-    
     <div>
       <button id="startObservationBtn" onclick="startRecording()">🎤 Démarrer</button>
       <button onclick="stopRecording()">🔴 Arrêter et Transcrire</button>
       <span id="observationStatus" class="status"></span>
     </div>
-    
     <button onclick="submitObservation()">✅ Enregistrer l'observation</button>
     <p id="obsMessage"></p>
   </section>
 
-  <script src="nurse-dashboard.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
