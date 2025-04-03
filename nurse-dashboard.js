@@ -11,7 +11,7 @@ window.onload = () => {
   if (currentIPP) {
     loadPatient(currentIPP);
   } else {
-    document.getElementById("patientInfo").innerHTML = "<p style='color:red;'>❌ IPP non trouvé dans l'URL.</p>";
+    document.getElementById("patientInfo").innerHTML = "<p class='error'>❌ IPP non trouvé dans l'URL.</p>";
   }
 };
 
@@ -19,26 +19,26 @@ function loadPatient(ipp) {
   fetch(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`, {
     headers: { Authorization: TOKEN }
   })
-  .then(res => res.json())
-  .then(data => {
-    if (!data || !data.nom) {
-      document.getElementById("patientInfo").innerHTML = "<p>❌ Patient non trouvé.</p>";
-      return;
-    }
+    .then(res => res.json())
+    .then(data => {
+      if (!data || !data.nom) {
+        document.getElementById("patientInfo").innerHTML = "<p class='error'>❌ Patient non trouvé.</p>";
+        return;
+      }
 
-    document.getElementById("patientInfo").innerHTML = `
-      <div><strong>Nom</strong>${data.prenom} ${data.nom}</div>
-      <div><strong>IPP</strong>${data.ipp}</div>
-      <div><strong>CIN</strong>${data.cin}</div>
-      <div><strong>Téléphone</strong>${data.telephone}</div>
-      <div><strong>Adresse</strong>${data.adresse}</div>
-      <div><strong>Mutuelle</strong>${data.mutuelle || 'Aucune'}</div>
-    `;
-  })
-  .catch(err => {
-    document.getElementById("patientInfo").innerHTML = "<p>❌ Erreur lors du chargement des données.</p>";
-    console.error(err);
-  });
+      document.getElementById("patientInfo").innerHTML = `
+        <div><strong>Nom:</strong> ${data.prenom} ${data.nom}</div>
+        <div><strong>IPP:</strong> ${data.ipp}</div>
+        <div><strong>CIN:</strong> ${data.cin}</div>
+        <div><strong>Téléphone:</strong> ${data.telephone}</div>
+        <div><strong>Adresse:</strong> ${data.adresse}</div>
+        <div><strong>Mutuelle:</strong> ${data.mutuelle || 'Aucune'}</div>
+      `;
+    })
+    .catch(err => {
+      document.getElementById("patientInfo").innerHTML = "<p class='error'>❌ Erreur lors du chargement des données.</p>";
+      console.error(err);
+    });
 }
 
 function startRecording() {
@@ -81,24 +81,24 @@ function sendAudioToAI(blob) {
     headers: { Authorization: TOKEN },
     body: formData
   })
-  .then(res => res.json())
-  .then(data => {
-    const text = Array.isArray(data)
-      ? data[0]?.transcript || data[0]?.text || ''
-      : data?.transcript || data?.text || '';
+    .then(res => res.json())
+    .then(data => {
+      const text = Array.isArray(data)
+        ? data[0]?.transcript || data[0]?.text || ''
+        : data?.transcript || data?.text || '';
 
-    if (!text) {
-      document.getElementById("observationStatus").innerText = "⚠️ Transcription vide.";
-      return;
-    }
+      if (!text) {
+        document.getElementById("observationStatus").innerText = "⚠️ Transcription vide.";
+        return;
+      }
 
-    document.getElementById("observationInput").value = text;
-    document.getElementById("observationStatus").innerText = "✅ Transcription terminée.";
-  })
-  .catch(err => {
-    console.error("Erreur transcription:", err);
-    document.getElementById("observationStatus").innerText = "❌ Erreur de transcription.";
-  });
+      document.getElementById("observationInput").value = text;
+      document.getElementById("observationStatus").innerText = "✅ Transcription terminée.";
+    })
+    .catch(err => {
+      console.error("Erreur transcription:", err);
+      document.getElementById("observationStatus").innerText = "❌ Erreur de transcription.";
+    });
 }
 
 function submitObservation() {
@@ -116,12 +116,12 @@ function submitObservation() {
     },
     body: JSON.stringify({ ipp: currentIPP, observation })
   })
-  .then(res => res.json())
-  .then(() => {
-    document.getElementById("obsMessage").innerText = "✅ Observation enregistrée avec succès.";
-  })
-  .catch(err => {
-    console.error("Erreur enregistrement observation:", err);
-    document.getElementById("obsMessage").innerText = "❌ Erreur lors de l'enregistrement.";
-  });
+    .then(res => res.json())
+    .then(() => {
+      document.getElementById("obsMessage").innerText = "✅ Observation enregistrée avec succès.";
+    })
+    .catch(err => {
+      console.error("Erreur enregistrement observation:", err);
+      document.getElementById("obsMessage").innerText = "❌ Erreur lors de l'enregistrement.";
+    });
 }
