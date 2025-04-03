@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Infirmier(ère)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>🩺 Dashboard Infirmier(ère)</h1>
+
+  <!-- Search Patient by IPP -->
+  <div class="section">
+    <h3>🔍 Rechercher un patient</h3>
+    <input id="ippInput" placeholder="Entrez l'IPP du patient" />
+    <button onclick="fetchPatient()">Rechercher</button>
+    <div id="patientInfo"></div>
+  </div>
+
+  <!-- Record and Transcribe -->
+  <div class="section">
+    <h3>🎤 Observation Audio</h3>
+    <button onclick="startRecording()">Démarrer l'enregistrement</button>
+    <button onclick="stopRecording()">Arrêter & Transcrire</button>
+    <p id="transcriptionStatus"></p>
+  </div>
+
+  <!-- Submit Observation -->
+  <div class="section">
+    <h3>📝 Observation Manuelle</h3>
+    <textarea id="observationInput" placeholder="Écrire l'observation ici..."></textarea>
+    <button onclick="submitObservation()">✅ Soumettre l'observation</button>
+    <p id="submissionMessage"></p>
+  </div>
+
+  <script src="nurse-dashboard.js"></script>
+</body>
+</html>
