@@ -1,32 +1,51 @@
+const BASE_URL = 'https://workflows.aphelionxinnovations.com';
+const TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5...'; // remplace avec ton vrai token
 
-const BASE_URL = "https://workflows.aphelionxinnovations.com";
-const TOKEN = "Bearer eyJhbGciOiJIUzI1NiIs..."; // Replace with real token
-
+let currentIPP = null;
 let mediaRecorder;
 let audioChunks = [];
 
-function fetchPatient() {
-  const ipp = document.getElementById("ippInput").value.trim();
-  if (!ipp) return alert("Veuillez entrer un IPP.");
+window.onload = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  currentIPP = urlParams.get('ipp');
+  if (currentIPP) {
+    loadPatient(currentIPP);
+  } else {
+    document.getElementById("patientInfo").innerHTML = "<p style='color:red;'>❌ IPP non trouvé dans l'URL.</p>";
+  }
+};
 
+// ✅ Chargement des infos du patient
+function loadPatient(ipp) {
   fetch(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`, {
     headers: { Authorization: TOKEN }
   })
     .then(res => res.json())
     .then(data => {
+      if (!data || !data.nom) {
+        document.getElementById("patientInfo").innerHTML = "<p>❌ Patient non trouvé.</p>";
+        return;
+      }
+
       document.getElementById("patientInfo").innerHTML = `
-        <strong>Nom:</strong> ${data.nom} ${data.prenom}<br>
+        <strong>Nom:</strong> ${data.prenom} ${data.nom}<br>
+        <strong>IPP:</strong> ${data.ipp}<br>
         <strong>CIN:</strong> ${data.cin}<br>
         <strong>Téléphone:</strong> ${data.telephone}<br>
         <strong>Adresse:</strong> ${data.adresse}<br>
         <strong>Mutuelle:</strong> ${data.mutuelle || 'Aucune'}
       `;
+    })
+    .catch(err => {
+      document.getElementById("patientInfo").innerHTML = "<p>❌ Erreur lors du chargement des données.</p>";
+      console.error(err);
     });
 }
 
+// ✅ Démarrer l'enregistrement
 function startRecording() {
   audioChunks = [];
-  document.getElementById("transcriptionStatus").innerText = "🎙️ Enregistrement...";
+  document.getElementById("observationStatus").innerText = "🎤 Enregistrement...";
 
   navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
     mediaRecorder = new MediaRecorder(stream);
@@ -35,41 +54,63 @@ function startRecording() {
     mediaRecorder.ondataavailable = e => {
       if (e.data.size > 0) audioChunks.push(e.data);
     };
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(audioChunks, { type: 'audio/webm' });
+      sendAudioToAI(blob);
+      document.getElementById("observationStatus").innerText = "⏳ Transcription en cours...";
+    };
+
+    document.getElementById("startObservationBtn").disabled = true;
+  }).catch(err => {
+    alert("Erreur microphone: " + err.message);
   });
 }
 
+// ✅ Arrêter l'enregistrement
 function stopRecording() {
   if (mediaRecorder && mediaRecorder.state === 'recording') {
     mediaRecorder.stop();
-    mediaRecorder.onstop = () => {
-      const blob = new Blob(audioChunks, { type: 'audio/webm' });
-      const formData = new FormData();
-      formData.append("audio", blob, "observation.webm");
-
-      fetch(`${BASE_URL}/webhook/nurse-transcribe-observation`, {
-        method: "POST",
-        headers: { Authorization: TOKEN },
-        body: formData
-      })
-        .then(res => res.json())
-        .then(data => {
-          const text = Array.isArray(data) ? data[0]?.transcript || data[0]?.text : data?.transcript || data?.text;
-          document.getElementById("observationInput").value = text;
-          document.getElementById("transcriptionStatus").innerText = "✅ Transcription terminée.";
-        })
-        .catch(() => {
-          document.getElementById("transcriptionStatus").innerText = "❌ Erreur de transcription.";
-        });
-    };
+    document.getElementById("startObservationBtn").disabled = false;
   }
 }
 
-function submitObservation() {
-  const ipp = document.getElementById("ippInput").value.trim();
-  const observation = document.getElementById("observationInput").value.trim();
+// ✅ Envoi du fichier audio à l'IA pour transcription
+function sendAudioToAI(blob) {
+  const formData = new FormData();
+  formData.append("audio", blob, "observation.webm");
 
-  if (!ipp || !observation) {
-    return alert("Veuillez remplir l'IPP et l'observation.");
+  fetch(`${BASE_URL}/webhook/nurse-transcribe-observation`, {
+    method: "POST",
+    headers: { Authorization: TOKEN },
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      const text = Array.isArray(data)
+        ? data[0]?.transcript || data[0]?.text || ''
+        : data?.transcript || data?.text || '';
+
+      if (!text) {
+        document.getElementById("observationStatus").innerText = "⚠️ Transcription vide.";
+        return;
+      }
+
+      document.getElementById("observationInput").value = text;
+      document.getElementById("observationStatus").innerText = "✅ Transcription terminée.";
+    })
+    .catch(err => {
+      console.error("Erreur transcription:", err);
+      document.getElementById("observationStatus").innerText = "❌ Erreur de transcription.";
+    });
+}
+
+// ✅ Envoi de l'observation
+function submitObservation() {
+  const observation = document.getElementById("observationInput").value.trim();
+  if (!observation) {
+    alert("Veuillez entrer une observation.");
+    return;
   }
 
   fetch(`${BASE_URL}/webhook/nurse-submit-observation`, {
@@ -78,12 +119,14 @@ function submitObservation() {
       "Content-Type": "application/json",
       Authorization: TOKEN
     },
-    body: JSON.stringify({ ipp, observation })
+    body: JSON.stringify({ ipp: currentIPP, observation })
   })
+    .then(res => res.json())
     .then(() => {
-      document.getElementById("submissionMessage").innerText = "✅ Observation soumise avec succès.";
+      document.getElementById("obsMessage").innerText = "✅ Observation enregistrée avec succès.";
     })
-    .catch(() => {
-      document.getElementById("submissionMessage").innerText = "❌ Échec de l'envoi.";
+    .catch(err => {
+      console.error("Erreur enregistrement observation:", err);
+      document.getElementById("obsMessage").innerText = "❌ Erreur lors de l'enregistrement.";
     });
 }
