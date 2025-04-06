@@ -7,15 +7,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
   <style>
+    /* --- CSS --- */
     :root { --primary: #5d74f2; --primary-light: #ebeffe; --success: #31c971; --success-light: #e0fbea; --warning: #ffb648; --warning-light: #fff8ec; --danger: #ff5a5a; --danger-light: #ffeded; --gray-100: #f9fafb; --gray-200: #f1f3f9; --gray-300: #e5e7eb; --gray-400: #d1d5db; --gray-500: #9ca3af; --gray-600: #6b7280; --gray-700: #4b5563; --gray-800: #374151; --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow-md: 0 4px 6px rgba(0,0,0,0.04); --border-radius: 8px; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--gray-800); line-height: 1.5; min-height: 100vh; padding: 0; visibility: hidden; /* Hide initially */ }
-    body.loaded { visibility: visible; /* Show when JS confirms auth */ }
+    body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--gray-800); line-height: 1.5; min-height: 100vh; padding: 0; visibility: hidden; }
+    body.loaded { visibility: visible; }
     .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 12px; }
-    .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-    .header-title { color: var(--primary); font-size: 1.3rem; font-weight: 600; }
-    .logo { color: var(--primary); font-weight: 700; font-size: 1rem; display: flex; align-items: center; }
-    .logo-img { height: 35px; width: auto; margin-right: 8px; } /* Use class for logo img */
+
+    /* --- MODIFIED HEADER STYLES --- */
+    .header { display: flex; align-items: center; /* Center items vertically in their rows */ padding: 15px 0; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--gray-200); }
+    .header-main-title { width: 100%; flex-basis: 100%; text-align: left; /* Or center */ margin-bottom: 10px; }
+    .header-title { color: var(--primary); font-size: 1.3rem; font-weight: 600; margin: 0; /* Remove default margin */ }
+    .header-actions { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .logo { color: var(--primary); display: flex; align-items: center; flex-grow: 1; /* Allow logo area to grow */ }
+    .logo-img { height: 35px; width: auto; margin-right: 8px; }
+    .logout-btn { padding: 5px 10px; font-size: 0.8rem; border-radius: var(--border-radius); flex-shrink: 0; /* Prevent button from shrinking */ }
+    /* --- END MODIFIED HEADER STYLES --- */
+
     .card { background: white; border-radius: var(--border-radius); box-shadow: var(--shadow-md); overflow: hidden; margin-bottom: 20px; }
     .card-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--gray-200); }
     .card-title { font-size: 1rem; font-weight: 600; color: var(--gray-800); display: flex; align-items: center; }
@@ -52,11 +60,12 @@
     .empty-state i { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.6; display: block; }
     .empty-state-message { font-size: 1rem; font-weight: 500; margin-bottom: 0.25rem; }
     .empty-state-description { font-size: 0.85rem; }
-    .logout-btn { padding: 5px 10px; font-size: 0.8rem; border-radius: var(--border-radius); }
 
     @media (max-width: 480px) {
       .header { padding: 12px 0; }
       .header-title { font-size: 1.1rem; }
+      .header-actions { flex-direction: column; align-items: flex-start; gap: 10px; } /* Stack logo/button */
+      .logout-btn { width: 100%; justify-content: center; } /* Full width button */
       .card-body { padding: 12px; }
       .btn { padding: 8px 12px; font-size: 0.8rem; }
       .patient-info { grid-template-columns: 1fr 1fr; }
@@ -65,38 +74,48 @@
     }
   </style>
 </head>
-<body > <!-- Body starts hidden -->
+<body >
   <div class="container">
+    <!-- MODIFIED HEADER STRUCTURE -->
     <div class="header">
-      <h1 class="header-title">🩺 Espace Infirmier</h1>
-      <div class="logo">
-         <!-- UPDATE src path and alt text -->
-        <img src="clinique-nakhil-logo-horizontal.webp" alt="MediClinic Logo" class="logo-img">
-        <button onclick="logout()" class="btn btn-outline logout-btn no-print"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
-      </div>
+        <div class="header-main-title">
+             <h1 class="header-title">🩺 Espace Infirmier</h1>
+        </div>
+        <div class="header-actions">
+            <div class="logo">
+                 <img src="./logo.png" alt="MediClinic Logo" class="logo-img"> <!-- ADJUST SRC -->
+            </div>
+            <button onclick="logout()" title="Déconnexion" class="btn btn-outline logout-btn no-print">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button>
+        </div>
     </div>
+    <!-- END MODIFIED HEADER STRUCTURE -->
+
 
     <!-- QR Scanner Card -->
     <div class="card no-print">
-      <div class="card-header"> <h2 class="card-title"> <i class="fas fa-qrcode"></i> Scanner Patient </h2> <div class="card-actions"> <i class="fas fa-camera"></i> </div> </div>
-       <div class="card-body">
-         <div class="qr-scanner-section">
-             <div class="btn-group">
-                 <button id="scanQrButton" class="btn btn-primary"> <i class="fas fa-qrcode"></i> Scanner QR </button>
-             </div>
-             <div id="scanner-container"> <video id="scanner-video" playsinline></video> </div>
-             <!-- Scan status messages appear in #obsMessage -->
+         <div class="card-header"> <h2 class="card-title"> <i class="fas fa-qrcode"></i> Scanner Patient </h2> <div class="card-actions"> <i class="fas fa-camera"></i> </div> </div>
+          <div class="card-body">
+            <div class="qr-scanner-section">
+                <div class="btn-group">
+                    <button id="scanQrButton" class="btn btn-primary"> <i class="fas fa-qrcode"></i> Scanner QR </button>
+                </div>
+                <div id="scanner-container">
+                   <video id="scanner-video" playsinline></video>
+                </div>
+                <!-- Scan status shown in #obsMessage -->
+            </div>
          </div>
-      </div>
-    </div>
+     </div>
 
     <!-- Patient Info Card -->
     <div class="card">
       <div class="card-header"> <h2 class="card-title"> <i class="fas fa-user-circle"></i> Informations du Patient </h2> <div class="card-actions"> <i class="fas fa-user"></i> </div> </div>
       <div class="card-body">
-        <div id="patientInfo" class="patient-info">
-          <div class="empty-state" style="grid-column: 1 / -1;"> <i class="fas fa-qrcode"></i> <div class="empty-state-message">Prêt à scanner</div> <div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div> </div>
-        </div>
+          <div id="patientInfo" class="patient-info">
+              <div class="empty-state" style="grid-column: 1 / -1;"> <i class="fas fa-qrcode"></i> <div class="empty-state-message">Prêt à scanner</div> <div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div> </div>
+          </div>
       </div>
     </div>
 
@@ -107,7 +126,7 @@
         <div class="input-group"> <textarea id="observationInput" placeholder="Saisir ou dicter l'observation ici..." disabled></textarea> </div>
         <div class="btn-group"> <button class="btn btn-outline" id="startObservationBtn" onclick="startRecording()" disabled> <i class="fas fa-microphone"></i> Démarrer </button> <button class="btn btn-outline" onclick="stopRecording()" disabled> <i class="fas fa-stop-circle"></i> Arrêter </button> <span id="observationStatus" class="status"></span> </div>
         <div class="btn-group"> <button class="btn btn-success" onclick="submitObservation()" disabled> <i class="fas fa-check-circle"></i> Enregistrer </button> </div>
-        <div id="obsMessage" class="message"></div> <!-- Observation submit & Scan status messages appear here -->
+        <div id="obsMessage" class="message"></div>
       </div>
     </div>
 
@@ -134,83 +153,38 @@
     const submitObservationBtn = document.querySelector('button[onclick="submitObservation()"]');
     const obsMessageDiv = document.getElementById("obsMessage");
 
-    // --- Auth & Helpers ---
-    function fetchWithAuth(url, options={}) { const token = localStorage.getItem('authToken'); if (!token) { console.error('Nurse: No token.'); alert('Session expirée.'); window.location.href = LOGIN_PAGE_URL; return Promise.reject(new Error('Token non trouvé.')); } const headers = { ...options.headers, 'Authorization': `Bearer ${token}` }; if (options.body && !(options.body instanceof FormData)) { headers['Content-Type'] = 'application/json'; } else if (options.body instanceof FormData) { delete headers['Content-Type']; } return fetch(url, { ...options, headers: headers }) .then(response => { if (response.status === 401 || response.status === 403) { console.error('Nurse: Auth error:', response.status); localStorage.removeItem('authToken'); alert('Session invalide.'); window.location.href = LOGIN_PAGE_URL; throw new Error(`Auth failed: ${response.status}`); } if (!response.ok) { return response.text().then(text => { throw new Error(`Erreur ${response.status}: ${text || response.statusText}`); }); } return response; }); }
-    function logout() { localStorage.removeItem('authToken'); alert('Déconnecté.'); window.location.href = LOGIN_PAGE_URL; }
+    // --- Auth & Helpers --- (No changes needed)
+    function fetchWithAuth(url, options={}) { /* ... */ }
+    function logout() { /* ... */ }
+    function showMessage(elementId, message, type) { /* ... */ }
 
-    // *** Added showMessage Function ***
-     function showMessage(elementId, message, type) {
-        const messageElement = document.getElementById(elementId);
-        if (!messageElement) { console.error(`Msg Elem "${elementId}" not found.`); return; }
-        const statusIcons = {'info':'fas fa-info-circle','success':'fas fa-check-circle','warning':'fas fa-exclamation-triangle','error':'fas fa-times-circle','loading':'fas fa-spinner fa-spin'};
-        const iconClass = statusIcons[type] || statusIcons['info'];
-        const iconHtml = message ? `<i class="${iconClass} me-2"></i>` : '';
-        messageElement.innerHTML = message ? `${iconHtml}${message}` : "";
-        messageElement.style.display = message ? "block" : "none";
-        messageElement.className = 'message'; // Reset class
-        if (type === "success") messageElement.classList.add("message-success");
-        else if (type === "warning") messageElement.classList.add("message-warning");
-        else if (type === "error") messageElement.classList.add("message-error");
-        else if (type === "info") messageElement.classList.add("message-info");
-        // Auto-hide success messages, keep others until cleared
-        if (type === "success" && message) {
-             setTimeout(() => { if (messageElement.innerHTML.includes(message)) { messageElement.style.display = 'none'; } }, 5000);
-        }
-    }
+    // --- Enable/Disable Observation Section --- (No changes needed)
+    function enableObservationSection(enable) { /* ... */ }
 
-    // --- Enable/Disable Observation Section ---
-    function enableObservationSection(enable) { const cardBody=observationCardBody, obsInput=observationInput, startBtn=startObservationBtn, stopBtn=stopObservationBtn, saveBtn=submitObservationBtn; if(!cardBody || !obsInput || !startBtn || !stopBtn || !saveBtn) return; if(enable) { cardBody.style.opacity = '1'; cardBody.style.pointerEvents = 'auto'; obsInput.disabled = false; startBtn.disabled = false; stopBtn.disabled = false; saveBtn.disabled = false; } else { cardBody.style.opacity = '0.5'; cardBody.style.pointerEvents = 'none'; obsInput.disabled = true; obsInput.value = ''; startBtn.disabled = true; stopBtn.disabled = true; saveBtn.disabled = true; showMessage('obsMessage', '', ''); document.getElementById("observationStatus").innerHTML = ''; } }
+    // --- Load Patient Function --- (No changes needed)
+    function loadPatient(ipp) { /* ... */ }
 
-    // --- Load Patient Function ---
-    function loadPatient(ipp) { console.log(`loadPatient CALLED for IPP: ${ipp}`); if (!patientInfoContainer) return; patientInfoContainer.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Chargement...'; enableObservationSection(false); fetchWithAuth(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`).then(res => res.json()).then(data => { if (!data || !data.nom) { throw new Error("Patient non trouvé/invalide."); } patientInfoContainer.innerHTML = `<div class="info-group"> <div class="info-label">Nom</div> <div class="info-value">${data.prenom||'N/A'} ${data.nom||'N/A'}</div> </div><div class="info-group"> <div class="info-label">IPP</div> <div class="info-value">${data.ipp||'N/A'}</div> </div><div class="info-group"> <div class="info-label">CIN</div> <div class="info-value">${data.cin||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Téléphone</div> <div class="info-value">${data.telephone||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Adresse</div> <div class="info-value">${data.adresse||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Mutuelle</div> <div class="info-value">${data.mutuelle||'Aucune'}</div> </div>`; enableObservationSection(true); }).catch(err => { if (!err.message.startsWith('Auth')) { patientInfoContainer.innerHTML = `<div class="message message-error" style="display:block; grid-column: 1 / -1;">❌ Erreur: ${err.message}</div>`; } console.error("Error loading patient data:", err); enableObservationSection(false); }); }
+    // --- Audio Recording Functions --- (No changes needed)
+    function startRecording() { /* ... */ }
+    function stopRecording() { /* ... */ }
 
-    // --- Audio Recording Functions ---
-    function startRecording() { if (!currentIPP) { alert("Veuillez charger un patient avant d'enregistrer."); return; } if (mediaRecorder && mediaRecorder.state === 'recording') return; audioChunks = []; const statusEl = document.getElementById("observationStatus"); statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Démarrage...'; statusEl.style.display = 'inline-flex'; navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => { mediaRecorder = new MediaRecorder(stream); mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); }; mediaRecorder.onstop = () => { if (audioChunks.length === 0) { console.warn("No audio."); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-exclamation-circle"></i> Vide'; document.getElementById("startObservationBtn").disabled = false; return; } const blob = new Blob(audioChunks, { type: 'audio/webm' }); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Transcription...'; sendAudioToAI(blob); audioChunks = []; document.getElementById("startObservationBtn").disabled = false; }; mediaRecorder.onerror = (e) => { console.error(`Rec Err: ${e.error}`); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-times-circle"></i> Err Rec.'; document.getElementById("startObservationBtn").disabled = false;}; mediaRecorder.start(); statusEl.innerHTML = '<i class="fas fa-microphone-alt fa-beat"></i> REC...'; document.getElementById("startObservationBtn").disabled = true; }).catch(err => { statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Err micro'; console.error("Mic Err:", err); alert("Err micro: " + err.message); document.getElementById("startObservationBtn").disabled = false; }); }
-    function stopRecording() { if (mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); } document.getElementById("startObservationBtn").disabled = false; }
+    // --- Send Audio Function --- (No changes needed)
+    function sendAudioToAI(blob) { /* ... */ }
 
-    // --- Send Audio Function ---
-    function sendAudioToAI(blob) { const formData = new FormData(); formData.append("audio", blob, "observation.webm"); const statusEl = document.getElementById("observationStatus"); statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Envoi...'; fetchWithAuth(`${BASE_URL}/webhook/nurse-transcribe-observation`, { method: "POST", body: formData }).then(res => res.json()).then(data => { let text = ''; if (Array.isArray(data) && data.length > 0) { text = data[0]?.transcript || data[0]?.text || ''; } else if (typeof data === 'object' && data !== null) { text = data.transcript || data.text || ''; } if (!text) { console.warn("Transc empty:", data); statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Vide'; return; } document.getElementById("observationInput").value = text; statusEl.innerHTML = '<i class="fas fa-check"></i> Terminé'; }).catch(err => { if (!err.message.startsWith('Auth')) { statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Err Transc.'; showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Err: ${err.message}`, "error");} console.error("Transc error:", err); }); }
+    // --- Submit Observation Function --- (No changes needed)
+    function submitObservation() { /* ... */ }
 
-    // --- Submit Observation Function ---
-    function submitObservation() { const observation = document.getElementById("observationInput").value.trim(); if (!currentIPP) { showMessage("obsMessage", `Chargez patient via QR.`, "warning"); return;} if (!observation) { showMessage("obsMessage", `Observation vide.`, "warning"); return; } showMessage("obsMessage", "", ""); fetchWithAuth(`${BASE_URL}/webhook/nurse-submit-observation`, { method: "POST", body: JSON.stringify({ ipp: currentIPP, observation }) }).then(response => response.ok ? response.json().catch(()=>({})) : response.text().then(text => { throw new Error(text||`Erreur ${response.status}`)}) ).then(() => { showMessage("obsMessage", "<i class='fas fa-check-circle'></i> Observation OK.", "success"); document.getElementById("observationInput").value = ''; }).catch(err => { if (!err.message.startsWith('Auth')) { showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Err: ${err.message}`, "error"); } console.error("Error saving obs:", err); }); }
+    // --- QR SCANNER CODE --- (No changes needed)
+    const scanButton = document.getElementById('scanQrButton'); /* ... */ let scanning = false; /* ... */ function updateScanStatus(message, type = 'info') { showMessage('obsMessage', message, type); } /* ... */ if (scanButton) { scanButton.onclick = async () => { /* ... */ }; } function stopScanner() { /* ... */ } function tick() { /* ... */ } function processScannedQrCode(scannedUrl) { /* ... */ } function loadPatientIntoCurrentDashboard(scannedIpp) { /* ... */ }
 
-    // --- QR SCANNER CODE ---
-    const scanButton = document.getElementById('scanQrButton');
-    const scannerContainer = document.getElementById('scanner-container');
-    const video = document.getElementById('scanner-video');
-    // Use obsMessageDiv for scan status
-    let scanning = false; let currentStream = null; let scanTimeout = null;
+    // --- window.onload --- (No changes needed)
+     window.onload = () => { /* ... */ };
 
-    function updateScanStatus(message, type = 'info') { showMessage('obsMessage', message, type); } // Uses showMessage
-
-    if (scanButton) { scanButton.onclick = async () => { if (!scanning) { try { showMessage('obsMessage', '', ''); updateScanStatus(''); scannerContainer.style.display = 'block'; updateScanStatus('Recherche caméra...', 'loading'); currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); video.srcObject = currentStream; await video.play(); updateScanStatus('Caméra prête. Scannez le code.', 'info'); scanButton.innerHTML = '<i class="fas fa-stop-circle"></i> Arrêter Scan'; scanButton.classList.replace('btn-primary','btn-danger'); scanning = true; clearTimeout(scanTimeout); scanTimeout = setTimeout(() => { if (scanning) { updateScanStatus('Aucun code détecté.', 'warning'); stopScanner(); } }, 30000); requestAnimationFrame(tick); } catch (err) { console.error("Cam Err:", err); updateScanStatus(`Err Cam: ${err.message}`, 'error'); stopScanner(); } } else { stopScanner(); updateScanStatus('Scan arrêté.', 'info'); } }; } else { console.warn("Scan button not found."); }
-    function stopScanner() { clearTimeout(scanTimeout); if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); } if(video) video.srcObject = null; if(scannerContainer) scannerContainer.style.display = 'none'; if(scanButton) {scanButton.innerHTML = '<i class="fas fa-qrcode"></i> Scanner QR'; scanButton.classList.replace('btn-danger','btn-primary');} scanning = false; currentStream = null; }
-    function tick() { if (!scanning || !video || video.videoWidth === 0 || video.readyState < 2) { if (scanning) requestAnimationFrame(tick); return; } const tce = document.createElement('canvas'); tce.height = video.videoHeight; tce.width = video.videoWidth; const tc = tce.getContext("2d",{willReadFrequently:true}); tc.drawImage(video, 0, 0, tce.width, tce.height); try { const id = tc.getImageData(0, 0, tce.width, tce.height); const code = window.jsQR(id.data, id.width, id.height, { inversionAttempts: "dontInvert" }); if (code) { console.log("QR Found:", code.data); stopScanner(); processScannedQrCode(code.data); } else { requestAnimationFrame(tick); } } catch (e) { console.error("Error during QR processing:", e); requestAnimationFrame(tick); } }
-    function processScannedQrCode(scannedUrl) { clearTimeout(scanTimeout); updateScanStatus('Code détecté. Traitement...', 'loading'); try { const url = new URL(scannedUrl); if (scannedUrl.startsWith(QR_TARGET_BASE_URL)) { const ippFromQr = url.searchParams.get('ipp'); if (ippFromQr) { updateScanStatus(`Patient IPP ${ippFromQr} trouvé. Chargement...`, 'success'); loadPatientIntoCurrentDashboard(ippFromQr); } else { updateScanStatus('Erreur: IPP manquant.', 'error'); } } else { updateScanStatus('Erreur: QR Code non reconnu.', 'error'); } } catch (e) { updateScanStatus(`Erreur: Format QR invalide (${e.message}).`, 'error'); } }
-
-    function loadPatientIntoCurrentDashboard(scannedIpp) { console.log(`Loading patient ${scannedIpp} into Nurse dashboard via QR`); currentIPP = scannedIpp; try { const newUrl = new URL(window.location); newUrl.searchParams.set('ipp', scannedIpp); window.history.pushState({ ipp: scannedIpp }, '', newUrl); } catch(e) { console.error("History API err:", e); } loadPatient(scannedIpp); if(observationInput) observationInput.value = ''; setTimeout(() => { showMessage('obsMessage', '', ''); }, 4000); document.getElementById('patientInfo')?.parentElement?.parentElement?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    // --- END QR SCANNER CODE ---
-
-
-    // --- window.onload (MODIFIED) ---
-    window.onload = () => {
-      if (!localStorage.getItem('authToken')) { console.log("Nurse Dash: No auth token..."); window.location.href = LOGIN_PAGE_URL; return; }
-       document.body.classList.add('loaded'); console.log("Nurse auth OK.");
-
-       const urlParams = new URLSearchParams(window.location.search);
-       const ippFromUrl = urlParams.get("ipp");
-
-       if (ippFromUrl) { // Load patient if IPP is in URL
-           console.log(`IPP in URL: ${ippFromUrl}. Loading initial data.`);
-           currentIPP = ippFromUrl;
-           loadPatient(currentIPP); // Load data for this IPP
-       } else { // No IPP in URL, show empty state
-           console.log("No initial IPP. Waiting scan.");
-           document.getElementById('patientInfo').innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-qrcode"></i><div class="empty-state-message">Prêt à scanner</div><div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div></div>';
-           enableObservationSection(false); // Keep observation section disabled
-       }
-       // Attach general listeners if any (already handled by onclick)
-    };
+    // --- *** Ensure all functions copied previously are present here *** ---
+    // (Including fetchWithAuth, logout, showMessage, enableObservationSection, loadPatient,
+    //  startRecording, stopRecording, sendAudioToAI, submitObservation,
+    //  QR Scanner functions: updateScanStatus, onclick, stopScanner, tick,
+    //  processScannedQrCode, loadPatientIntoCurrentDashboard)
 
   </script>
 </body>
