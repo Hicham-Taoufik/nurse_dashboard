@@ -3,599 +3,228 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- Changed Title -->
   <title>Dashboard - Infirmier</title>
-  <!-- Using Doctor's Fonts & Font Awesome -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-  <!-- Using Doctor's CSS -->
   <style>
+    /* --- CSS is identical to the updated Nurse CSS from before --- */
     :root {
-      --primary: #5d74f2;
-      --primary-light: #ebeffe;
-      --success: #31c971;
-      --success-light: #e0fbea;
-      --warning: #ffb648;
-      --warning-light: #fff8ec;
-      --danger: #ff5a5a;
-      --danger-light: #ffeded;
-      --gray-100: #f9fafb;
-      --gray-200: #f1f3f9;
-      --gray-300: #e5e7eb;
-      --gray-400: #d1d5db;
-      --gray-500: #9ca3af;
-      --gray-600: #6b7280;
-      --gray-700: #4b5563;
-      --gray-800: #374151;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-      --shadow-md: 0 4px 6px rgba(0,0,0,0.04);
-      --border-radius: 8px;
+      --primary: #5d74f2; --primary-light: #ebeffe; --success: #31c971; --success-light: #e0fbea; --warning: #ffb648; --warning-light: #fff8ec; --danger: #ff5a5a; --danger-light: #ffeded; --gray-100: #f9fafb; --gray-200: #f1f3f9; --gray-300: #e5e7eb; --gray-400: #d1d5db; --gray-500: #9ca3af; --gray-600: #6b7280; --gray-700: #4b5563; --gray-800: #374151; --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow-md: 0 4px 6px rgba(0,0,0,0.04); --border-radius: 8px;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--gray-100); /* Changed background */
-      color: var(--gray-800);
-      line-height: 1.5;
-      min-height: 100vh;
-      padding: 0; /* Removed body padding */
-    }
-
-    /* Added Container from Doctor's CSS */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* Added Header from Doctor's CSS */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 0;
-      margin-bottom: 30px;
-    }
-
-    .header-title {
-      color: var(--primary);
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    .logo {
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-    }
-
-    .logo i {
-      margin-right: 8px;
-    }
-
-    /* Added Card styles from Doctor's CSS */
-     .card {
-      background: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-md);
-      overflow: hidden;
-      margin-bottom: 25px;
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--gray-200);
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--gray-800);
-      display: flex;
-      align-items: center;
-    }
-
-    .card-title i {
-      margin-right: 10px;
-      color: var(--primary);
-    }
-
-    .card-actions {
-      color: white;
-      background: var(--primary);
-      border-radius: var(--border-radius);
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card-body {
-      padding: 20px;
-    }
-
-    /* Added Patient Info grid styles */
-    .patient-info {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 15px;
-    }
-
-    .info-group {
-      margin-bottom: 5px;
-    }
-
-    .info-label {
-      font-size: 0.75rem;
-      color: var(--gray-500);
-      margin-bottom: 4px;
-    }
-
-    .info-value {
-      font-size: 0.9rem;
-      color: var(--gray-800);
-      font-weight: 500;
-    }
-
-    /* Added Form element styles */
-     label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 0.85rem;
-      color: var(--gray-600);
-    }
-
-    textarea, input[type="text"], input[type="date"] {
-      width: 100%;
-      padding: 10px 12px;
-      font-size: 0.9rem;
-      border-radius: var(--border-radius);
-      border: 1px solid var(--gray-300);
-      background: white;
-      transition: all 0.2s ease;
-      font-family: 'Inter', sans-serif;
-    }
-
-    textarea:focus, input[type="text"]:focus, input[type="date"]:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(93, 116, 242, 0.1);
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 120px; /* Adjusted height */
-    }
-
-    /* Added Input Group Style */
-    .input-group {
-        margin-bottom: 15px;
-    }
-
-    /* Added Button Group Style */
-     .btn-group {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px; /* Add margin top to separate from textarea */
-    }
-
-    /* Added Button styles */
-    .btn {
-      padding: 8px 16px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      border-radius: var(--border-radius);
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn i {
-      margin-right: 6px;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #4a62d8;
-    }
-
-    .btn-outline {
-      background: white;
-      color: var(--primary);
-      border: 1px solid var(--gray-300);
-    }
-
-    .btn-outline:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .btn-success {
-      background: var(--success);
-      color: white;
-    }
-
-    .btn-success:hover {
-      background: #28a960;
-    }
-
-    /* Added Status styles */
-    .status {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      color: var(--gray-600);
-      background: var(--gray-200);
-      margin-left: 10px; /* Adjusted alignment */
-    }
-
-    /* Added Message styles */
-    .message {
-      padding: 10px;
-      border-radius: 6px;
-      margin-top: 15px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      display: none; /* Hidden by default */
-    }
-
-    .message-success {
-      background: var(--success-light);
-      color: var(--success);
-    }
-
-    .message-warning {
-      background: var(--warning-light);
-      color: var(--warning);
-    }
-
-    .message-error {
-      background: var(--danger-light);
-      color: var(--danger);
-    }
-
-    /* Added Responsive styles */
-     @media (max-width: 768px) {
-      .patient-info {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--gray-800); line-height: 1.5; min-height: 100vh; padding: 0; visibility: hidden; /* Hide initially */ }
+    body.loaded { visibility: visible; /* Show when JS confirms auth */ }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; margin-bottom: 30px; }
+    .header-title { color: var(--primary); font-size: 1.5rem; font-weight: 600; }
+    .logo { color: var(--primary); font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; }
+    .logo i { margin-right: 8px; }
+     .card { background: white; border-radius: var(--border-radius); box-shadow: var(--shadow-md); overflow: hidden; margin-bottom: 25px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--gray-200); }
+    .card-title { font-size: 1rem; font-weight: 600; color: var(--gray-800); display: flex; align-items: center; }
+    .card-title i { margin-right: 10px; color: var(--primary); }
+    .card-actions { color: white; background: var(--primary); border-radius: var(--border-radius); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+    .card-body { padding: 20px; }
+    .patient-info { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+    .info-group { margin-bottom: 5px; }
+    .info-label { font-size: 0.75rem; color: var(--gray-500); margin-bottom: 4px; }
+    .info-value { font-size: 0.9rem; color: var(--gray-800); font-weight: 500; }
+     label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--gray-600); }
+    textarea, input[type="text"], input[type="date"] { width: 100%; padding: 10px 12px; font-size: 0.9rem; border-radius: var(--border-radius); border: 1px solid var(--gray-300); background: white; transition: all 0.2s ease; font-family: 'Inter', sans-serif; }
+    textarea:focus, input[type="text"]:focus, input[type="date"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(93, 116, 242, 0.1); }
+    textarea { resize: vertical; min-height: 120px; }
+    .input-group { margin-bottom: 15px; }
+     .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+    .btn { padding: 8px 16px; font-size: 0.85rem; font-weight: 500; border-radius: var(--border-radius); border: none; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; }
+    .btn i { margin-right: 6px; }
+    .btn-primary { background: var(--primary); color: white; } .btn-primary:hover { background: #4a62d8; }
+    .btn-outline { background: white; color: var(--primary); border: 1px solid var(--gray-300); } .btn-outline:hover { border-color: var(--primary); background: var(--primary-light); }
+    .btn-success { background: var(--success); color: white; } .btn-success:hover { background: #28a960; }
+    .btn:disabled { background-color: var(--gray-300); cursor: not-allowed; }
+    .status { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; color: var(--gray-600); background: var(--gray-200); margin-left: 10px; }
+    .message { padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 0.85rem; font-weight: 500; display: none; }
+    .message-success { background: var(--success-light); color: var(--success); }
+    .message-warning { background: var(--warning-light); color: var(--warning); }
+    .message-error { background: var(--danger-light); color: var(--danger); }
+     @media (max-width: 768px) { .patient-info { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
-<body>
-  <!-- Added Container -->
+<body > <!-- Body starts hidden -->
   <div class="container">
-    <!-- Added Header -->
     <div class="header">
-      <h1 class="header-title">🩺 Espace Infirmier</h1> <!-- Updated Title -->
+      <h1 class="header-title">🩺 Espace Infirmier</h1>
       <div class="logo">
-        <i class="fas fa-hospital"></i> MediClinic <!-- Or a nurse icon: fa-user-nurse -->
+        <i class="fas fa-user-nurse"></i> MediClinic <!-- Nurse icon -->
+        <!-- Added Logout Button -->
+        <button onclick="logout()" style="margin-left: 20px; padding: 5px 10px; cursor: pointer;" title="Déconnexion" class="btn btn-outline">
+            <i class="fas fa-sign-out-alt"></i> Déconnexion
+        </button>
       </div>
     </div>
 
     <!-- Patient Info Card -->
     <div class="card">
-      <div class="card-header">
-        <h2 class="card-title">
-          <i class="fas fa-user-circle"></i> Informations du Patient
-        </h2>
-        <div class="card-actions">
-          <i class="fas fa-user"></i>
-        </div>
-      </div>
-      <div class="card-body">
-        <!-- Target for patient info, using new class -->
-        <div id="patientInfo" class="patient-info">Chargement...</div>
-      </div>
+      <div class="card-header"> <h2 class="card-title"> <i class="fas fa-user-circle"></i> Informations du Patient </h2> <div class="card-actions"> <i class="fas fa-user"></i> </div> </div>
+      <div class="card-body"> <div id="patientInfo" class="patient-info">Chargement...</div> </div>
     </div>
 
     <!-- Observation Card -->
     <div class="card">
-      <div class="card-header">
-        <h2 class="card-title">
-          <i class="fas fa-notes-medical"></i> Observation Infirmier
-        </h2>
-         <div class="card-actions">
-            <i class="fas fa-clipboard-list"></i>
-        </div>
-      </div>
+      <div class="card-header"> <h2 class="card-title"> <i class="fas fa-notes-medical"></i> Observation Infirmier </h2> <div class="card-actions"> <i class="fas fa-clipboard-list"></i> </div> </div>
       <div class="card-body">
-        <!-- Input Group for Textarea -->
-        <div class="input-group">
-          <textarea id="observationInput" placeholder="Saisir ou dicter l'observation ici..."></textarea>
-          <!-- Removed absolutely positioned mic button -->
-        </div>
-
-        <!-- Button Group for Recording -->
-        <div class="btn-group">
-          <button class="btn btn-outline" id="startObservationBtn" onclick="startRecording()">
-            <i class="fas fa-microphone"></i> Démarrer
-          </button>
-          <button class="btn btn-outline" onclick="stopRecording()">
-             <i class="fas fa-stop-circle"></i> Arrêter & Transcrire
-          </button>
-          <!-- Status indicator -->
-          <span id="observationStatus" class="status"></span>
-        </div>
-
-         <!-- Button Group for Saving -->
-        <div class="btn-group">
-          <button class="btn btn-success" onclick="submitObservation()">
-            <i class="fas fa-check-circle"></i> Enregistrer l'observation
-          </button>
-        </div>
-
-        <!-- Message area for submission status -->
+        <div class="input-group"> <textarea id="observationInput" placeholder="Saisir ou dicter l'observation ici..."></textarea> </div>
+        <div class="btn-group"> <button class="btn btn-outline" id="startObservationBtn" onclick="startRecording()"> <i class="fas fa-microphone"></i> Démarrer </button> <button class="btn btn-outline" onclick="stopRecording()"> <i class="fas fa-stop-circle"></i> Arrêter & Transcrire </button> <span id="observationStatus" class="status"></span> </div>
+        <div class="btn-group"> <button class="btn btn-success" onclick="submitObservation()"> <i class="fas fa-check-circle"></i> Enregistrer l'observation </button> </div>
         <div id="obsMessage" class="message"></div>
       </div>
     </div>
 
   </div> <!-- End Container -->
 
-  <!-- Adapted JavaScript -->
   <script>
     const BASE_URL = 'https://workflows.aphelionxinnovations.com';
-    const TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJndWlkIjoiZmJmMmI1ZjctZTc3ZS00ZGZmLWJlN2UtN2ZlOGVkZmViZmY1IiwiZmlyc3ROYW1lIjoiTW91c3NhIiwibGFzdE5hbWUiOiJTYWlkaSIsInVzZXJuYW1lIjoic2FpZGkiLCJlbWFpbCI6Im1vdXNzYS5zYWlkaS4wMUBnbXppbC5jb20iLCJwYXNzd29yZCI6ImFkbWluMTIzNCIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc0Mjk1MjMyNn0.1s_IWO-h-AKwkP0LIX8mcjdeLRwsRtgbqAchIJSRVEA';
+    // *** ADD ABSOLUTE URL for the Login Page ***
+    const LOGIN_PAGE_URL = 'https://hicham-taoufik.github.io/login/'; // Crucial for cross-repo redirect
 
     let currentIPP = null;
     let mediaRecorder;
     let audioChunks = [];
 
+    // --- fetchWithAuth Helper Function ---
+    function fetchWithAuth(url, options = {}) {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            console.error('Nurse: Auth token not found. Redirecting to login.');
+            alert('Session expirée ou non connecté. Veuillez vous reconnecter.');
+            window.location.href = LOGIN_PAGE_URL; // Use absolute URL
+            return Promise.reject(new Error('Authentication token not found.'));
+        }
+        const headers = { ...options.headers, 'Authorization': `Bearer ${token}` };
+        if (options.body && !(options.body instanceof FormData)) { headers['Content-Type'] = 'application/json'; }
+        else if (options.body instanceof FormData) { delete headers['Content-Type']; }
+        return fetch(url, { ...options, headers: headers })
+            .then(response => {
+                if (response.status === 401 || response.status === 403) {
+                     console.error('Nurse: Auth error:', response.status); localStorage.removeItem('authToken'); alert('Session expirée ou invalide. Veuillez vous reconnecter.');
+                     window.location.href = LOGIN_PAGE_URL; // Use absolute URL
+                     throw new Error(`Authentication failed: ${response.status}`);
+                }
+                 if (!response.ok) { return response.text().then(text => { throw new Error(`Erreur ${response.status}: ${text || response.statusText}`); }); }
+                return response;
+            });
+    }
+
+    // --- Logout Function ---
+    function logout() {
+        localStorage.removeItem('authToken');
+        alert('Vous avez été déconnecté.');
+        window.location.href = LOGIN_PAGE_URL; // Use absolute URL
+    }
+
+    // --- window.onload Check ---
     window.onload = () => {
+      if (!localStorage.getItem('authToken')) {
+          console.log("Nurse Dash: No auth token found, redirecting to login.");
+          window.location.href = LOGIN_PAGE_URL; // Use absolute URL
+          return;
+      }
+      document.body.classList.add('loaded'); // Make body visible
+      console.log("Nurse dashboard loaded with valid token.");
+
+      // Original onload logic
       const urlParams = new URLSearchParams(window.location.search);
       currentIPP = urlParams.get('ipp');
-      const patientInfoContainer = document.getElementById("patientInfo"); // Get container reference
+      const patientInfoContainer = document.getElementById("patientInfo");
 
       if (currentIPP) {
-        loadPatient(currentIPP);
+        loadPatient(currentIPP); // Will use fetchWithAuth now
       } else {
-        patientInfoContainer.innerHTML = `<div class="message message-error" style="display:block; grid-column: 1 / -1;">❌ IPP non trouvé dans l'URL.</div>`; // Span across grid
+        patientInfoContainer.innerHTML = `<div class="message message-warning" style="display:block; grid-column: 1 / -1;">❌ IPP non trouvé dans l'URL.</div>`;
       }
     };
 
+    // --- Load Patient Function ---
     function loadPatient(ipp) {
       const patientInfoContainer = document.getElementById("patientInfo");
-      patientInfoContainer.innerHTML = 'Chargement des informations...'; // Loading state
-
-      fetch(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`, { // Using nurse endpoint
-        headers: { Authorization: TOKEN }
-      })
-        .then(res => {
-            if (!res.ok) throw new Error(`Erreur réseau ${res.status}`);
-            return res.json();
-        })
+      patientInfoContainer.innerHTML = 'Chargement...';
+      fetchWithAuth(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`) // Use fetchWithAuth, nurse endpoint
+        .then(res => res.json())
         .then(data => {
-          if (!data || !data.nom) { // Check if data is valid
-             throw new Error("Patient non trouvé ou réponse invalide.");
-          }
-
-          // Generate HTML using the Doctor's dashboard grid structure
+          if (!data || !data.nom) { throw new Error("Patient non trouvé/invalide."); }
           patientInfoContainer.innerHTML = `
-            <div class="info-group">
-              <div class="info-label">Nom</div>
-              <div class="info-value">${data.prenom || 'N/A'} ${data.nom || 'N/A'}</div>
-            </div>
-            <div class="info-group">
-              <div class="info-label">IPP</div>
-              <div class="info-value">${data.ipp || 'N/A'}</div>
-            </div>
-            <div class="info-group">
-              <div class="info-label">CIN</div>
-              <div class="info-value">${data.cin || 'N/A'}</div>
-            </div>
-            <div class="info-group">
-              <div class="info-label">Téléphone</div>
-              <div class="info-value">${data.telephone || 'N/A'}</div>
-            </div>
-            <div class="info-group">
-              <div class="info-label">Adresse</div>
-              <div class="info-value">${data.adresse || 'N/A'}</div>
-            </div>
-            <div class="info-group">
-              <div class="info-label">Mutuelle</div>
-              <div class="info-value">${data.mutuelle || 'Aucune'}</div>
-            </div>
-          `;
+            <div class="info-group"> <div class="info-label">Nom</div> <div class="info-value">${data.prenom||'N/A'} ${data.nom||'N/A'}</div> </div>
+            <div class="info-group"> <div class="info-label">IPP</div> <div class="info-value">${data.ipp||'N/A'}</div> </div>
+            <div class="info-group"> <div class="info-label">CIN</div> <div class="info-value">${data.cin||'N/A'}</div> </div>
+            <div class="info-group"> <div class="info-label">Téléphone</div> <div class="info-value">${data.telephone||'N/A'}</div> </div>
+            <div class="info-group"> <div class="info-label">Adresse</div> <div class="info-value">${data.adresse||'N/A'}</div> </div>
+            <div class="info-group"> <div class="info-label">Mutuelle</div> <div class="info-value">${data.mutuelle||'Aucune'}</div> </div>`;
         })
-        .catch(err => {
-          patientInfoContainer.innerHTML = `<div class="message message-error" style="display:block; grid-column: 1 / -1;">❌ Erreur chargement: ${err.message}</div>`; // Span across grid
-          console.error("Error loading patient data:", err);
-        });
+        .catch(err => { if (!err.message.startsWith('Auth')) { patientInfoContainer.innerHTML = `<div class="message message-error" style="display:block; grid-column: 1 / -1;">❌ Erreur: ${err.message}</div>`; } console.error("Error loading patient data:", err); });
     }
 
+    // --- Audio Recording Functions ---
     function startRecording() {
-      audioChunks = [];
-       // Use the status element for feedback
-      document.getElementById("observationStatus").innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Enregistrement...';
-      document.getElementById("observationStatus").style.display = 'inline-flex'; // Make status visible
+        if (mediaRecorder && mediaRecorder.state === 'recording') return;
+        audioChunks = [];
+        const statusEl = document.getElementById("observationStatus");
+        statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Démarrage...'; statusEl.style.display = 'inline-flex';
 
-
-      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.start();
-
-        mediaRecorder.ondataavailable = e => {
-          if (e.data.size > 0) audioChunks.push(e.data);
-        };
-
-        mediaRecorder.onstop = () => {
-          const blob = new Blob(audioChunks, { type: 'audio/webm' });
-          sendAudioToAI(blob);
-           // Update status
-           document.getElementById("observationStatus").innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Transcription...';
-        };
-
-        // Disable start button during recording
-        document.getElementById("startObservationBtn").disabled = true;
-
-      }).catch(err => {
-         document.getElementById("observationStatus").innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur micro';
-         console.error("Microphone error:", err);
-         // Optionally use showMessage for a more prominent error
-         showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Erreur microphone: ${err.message}`, "error");
-      });
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+                mediaRecorder.onstop = () => { // onstop handler
+                    if (audioChunks.length === 0) { console.warn("No audio recorded."); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-exclamation-circle"></i> Vide'; return; }
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    document.getElementById("observationStatus").innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Transcription...';
+                    sendAudioToAI(blob); // Call send function
+                    audioChunks = []; // Clear chunks
+                };
+                mediaRecorder.onerror = (event) => { console.error(`Recorder Error: ${event.error}`); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-times-circle"></i> Erreur Rec.'; };
+                mediaRecorder.start();
+                statusEl.innerHTML = '<i class="fas fa-microphone-alt fa-beat"></i> Enregistrement...';
+                document.getElementById("startObservationBtn").disabled = true;
+            })
+            .catch(err => { statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur micro'; console.error("Mic Error:", err); alert("Erreur accès microphone: " + err.message); });
     }
 
     function stopRecording() {
-      if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
-        // Re-enable start button
-        document.getElementById("startObservationBtn").disabled = false;
-         // Status will be updated in onstop handler
-      } else {
-          // Clear status if not recording when stop is clicked
-          document.getElementById("observationStatus").innerHTML = '';
-          document.getElementById("observationStatus").style.display = 'none';
-          document.getElementById("startObservationBtn").disabled = false; // Ensure it's enabled
-      }
+        if (mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); } // onstop handles UI update
+        document.getElementById("startObservationBtn").disabled = false; // Re-enable start button
+        // Optionally clear status immediately if desired, though onstop will update shortly
+        // document.getElementById("observationStatus").innerHTML = '';
     }
 
+    // --- Send Audio Function ---
     function sendAudioToAI(blob) {
-      const formData = new FormData();
-      formData.append("audio", blob, "observation.webm");
+        const formData = new FormData(); formData.append("audio", blob, "observation.webm");
+        const statusEl = document.getElementById("observationStatus");
+        statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Envoi...';
 
-      // Update status
-      document.getElementById("observationStatus").innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Envoi...';
-
-
-      fetch(`${BASE_URL}/webhook/nurse-transcribe-observation`, { // Using nurse endpoint
-        method: "POST",
-        headers: { Authorization: TOKEN },
-        body: formData
-      })
-        .then(res => {
-            if (!res.ok) throw new Error(`Erreur réseau ${res.status}`);
-            return res.json();
-        })
-        .then(data => {
-          // Handle potential variations in transcription response structure
-          let text = '';
-          if (Array.isArray(data) && data.length > 0) {
-              text = data[0]?.transcript || data[0]?.text || '';
-          } else if (typeof data === 'object' && data !== null) {
-              text = data.transcript || data.text || '';
-          }
-
-          if (!text) {
-            console.warn("Transcription result empty or in unexpected format:", data);
-            document.getElementById("observationStatus").innerHTML = '<i class="fas fa-exclamation-circle"></i> Vide';
-            return;
-          }
-
-          document.getElementById("observationInput").value = text;
-          document.getElementById("observationStatus").innerHTML = '<i class="fas fa-check"></i> Terminé';
-          // Optionally hide status after a delay
-          // setTimeout(() => {
-          //     document.getElementById("observationStatus").style.display = 'none';
-          // }, 3000);
-
-        })
-        .catch(err => {
-          console.error("Transcription error:", err);
-           document.getElementById("observationStatus").innerHTML = '<i class="fas fa-times-circle"></i> Erreur Transc.';
-           // Show persistent error in main message area
-           showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Erreur transcription: ${err.message}`, "error");
-
-        });
+        fetchWithAuth(`${BASE_URL}/webhook/nurse-transcribe-observation`, { method: "POST", body: formData }) // Use fetchWithAuth, nurse endpoint
+            .then(res => res.json())
+            .then(data => {
+                let text = ''; if (Array.isArray(data) && data.length > 0) { text = data[0]?.transcript || data[0]?.text || ''; } else if (typeof data === 'object' && data !== null) { text = data.transcript || data.text || ''; }
+                if (!text) { console.warn("Transcription empty:", data); statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Vide'; return; }
+                document.getElementById("observationInput").value = text; statusEl.innerHTML = '<i class="fas fa-check"></i> Terminé';
+            })
+            .catch(err => { if (!err.message.startsWith('Auth')) { statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Erreur Transc.'; showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Erreur: ${err.message}`, "error");} console.error("Transcription error:", err); });
     }
 
+    // --- Submit Observation Function ---
     function submitObservation() {
-      const observation = document.getElementById("observationInput").value.trim();
-      if (!observation) {
-         // Use the showMessage function for feedback
-         showMessage("obsMessage", "Veuillez entrer ou dicter une observation.", "warning");
-        return;
-      }
-      // Clear previous messages before submitting
-      showMessage("obsMessage", "", "");
+        const observation = document.getElementById("observationInput").value.trim();
+        if (!observation || !currentIPP) { showMessage("obsMessage", `Observation vide ${!currentIPP ? 'ou patient non sélectionné' : ''}.`, "warning"); return; }
+        showMessage("obsMessage", "", ""); // Clear message
 
-
-      fetch(`${BASE_URL}/webhook/nurse-submit-observation`, { // Using nurse endpoint
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: TOKEN
-        },
-        body: JSON.stringify({ ipp: currentIPP, observation })
-      })
-       .then(response => {
-            if (!response.ok) throw new Error(`Erreur réseau ${response.status}`);
-            // Check content type as response might be empty on success
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-                return response.json();
-            }
-            return {}; // Return empty object if no JSON
-        })
-        .then((data) => { // data might be empty
-          // Use the showMessage function for success feedback
-          showMessage("obsMessage", "<i class='fas fa-check-circle'></i> Observation enregistrée avec succès.", "success");
-          console.log("Observation submission response:", data);
-          // Optionally clear the textarea after success
-          // document.getElementById("observationInput").value = '';
-        })
-        .catch(err => {
-          console.error("Erreur enregistrement observation:", err);
-          // Use the showMessage function for error feedback
-           showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Erreur enregistrement: ${err.message}`, "error");
-        });
+        fetchWithAuth(`${BASE_URL}/webhook/nurse-submit-observation`, { method: "POST", body: JSON.stringify({ ipp: currentIPP, observation }) }) // Use fetchWithAuth, nurse endpoint
+            .then(response => response.ok ? response.json().catch(()=>({})) : response.text().then(text => { throw new Error(text||`Erreur ${response.status}`)}) )
+            .then(() => { showMessage("obsMessage", "<i class='fas fa-check-circle'></i> Observation enregistrée.", "success"); console.log("Observation submission successful."); /* document.getElementById("observationInput").value = ''; */ })
+            .catch(err => { if (!err.message.startsWith('Auth')) { showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Erreur: ${err.message}`, "error"); } console.error("Error saving observation:", err); });
     }
 
-     // Added showMessage function (similar to Doctor's dashboard)
-     function showMessage(elementId, message, type) {
-        const messageElement = document.getElementById(elementId);
-        if (!messageElement) {
-            console.error(`Message element with ID "${elementId}" not found.`);
-            return;
-        }
-
-        messageElement.innerHTML = message || ""; // Ensure content is cleared if message is empty
-        messageElement.style.display = message ? "block" : "none"; // Show only if there is a message
-
-        // Remove any existing type classes first
-        messageElement.classList.remove("message-success", "message-warning", "message-error");
-         messageElement.className = "message"; // Reset class to base
-
-        // Add appropriate class based on type
-        if (type === "success") {
-            messageElement.classList.add("message-success");
-        } else if (type === "warning") {
-            messageElement.classList.add("message-warning");
-        } else if (type === "error") {
-            messageElement.classList.add("message-error");
-        }
-
-        // Auto-hide after 5 seconds ONLY for success messages
-        if (type === "success" && message) { // Only set timeout if it's a success message with content
-            setTimeout(() => {
-            // Check if the message is still the same success message before hiding
-            if (messageElement.classList.contains("message-success") && messageElement.innerHTML === message) {
-                messageElement.style.display = "none";
-            }
-            }, 5000);
-        }
-    }
+     // --- Show Message Function ---
+     function showMessage(elementId, message, type) { const messageElement = document.getElementById(elementId); if (!messageElement) { console.error(`Msg Elem "${elementId}" not found.`); return; } messageElement.innerHTML = message || ""; messageElement.style.display = message ? "block" : "none"; messageElement.className = "message"; if (type === "success") messageElement.classList.add("message-success"); else if (type === "warning") messageElement.classList.add("message-warning"); else if (type === "error") messageElement.classList.add("message-error"); if (type === "success" && message) { setTimeout(() => { if (messageElement.classList.contains("message-success") && messageElement.innerHTML === message) { messageElement.style.display = "none"; } }, 5000); } }
   </script>
 </body>
 </html>
