@@ -13,33 +13,30 @@
     body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--gray-800); line-height: 1.5; min-height: 100vh; padding: 0; visibility: hidden; }
     body.loaded { visibility: visible; }
     .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 12px; }
-    /* Header Styles */
+    /* --- UPDATED HEADER STYLES --- */
     .header { display: flex; align-items: center; padding: 15px 0; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--gray-200); }
-    .header-main-title { width: 100%; flex-basis: 100%; text-align: left; margin-bottom: 10px; }
+    .header-main-content { display: flex; align-items: center; gap: 10px; flex-grow: 1; } /* Group logo and title */
+    .logo { display: flex; align-items: center; }
+    .logo-img { height: 35px; width: auto; }
     .header-title { color: var(--primary); font-size: 1.3rem; font-weight: 600; margin: 0; }
-    .header-actions { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-    .logo { color: var(--primary); display: flex; align-items: center; flex-grow: 1; }
-    .logo-img { height: 35px; width: auto; margin-right: 8px; }
-    .logout-btn { padding: 5px 10px; font-size: 0.8rem; border-radius: var(--border-radius); flex-shrink: 0; }
-    /* Card Styles */
+    .header-logout { flex-shrink: 0; } /* Prevent button shrinking */
+    .logout-btn { padding: 5px 10px; font-size: 0.8rem; border-radius: var(--border-radius); }
+    /* --- END UPDATED HEADER STYLES --- */
     .card { background: white; border-radius: var(--border-radius); box-shadow: var(--shadow-md); overflow: hidden; margin-bottom: 20px; }
     .card-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--gray-200); }
     .card-title { font-size: 1rem; font-weight: 600; color: var(--gray-800); display: flex; align-items: center; }
     .card-title i { margin-right: 10px; color: var(--primary); }
     .card-actions { color: white; background: var(--primary); border-radius: var(--border-radius); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
     .card-body { padding: 16px; }
-    /* Patient Info */
     .patient-info { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
     .info-group { margin-bottom: 5px; }
     .info-label { font-size: 0.75rem; color: var(--gray-500); margin-bottom: 4px; }
     .info-value { font-size: 0.85rem; color: var(--gray-800); font-weight: 500; word-break: break-word; }
-    /* Form Elements */
     label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--gray-600); }
     textarea, input[type="text"], input[type="date"] { width: 100%; padding: 10px 12px; font-size: 0.9rem; border-radius: var(--border-radius); border: 1px solid var(--gray-300); background: white; transition: all 0.2s ease; font-family: 'Inter', sans-serif; }
     textarea:focus, input[type="text"]:focus, input[type="date"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(93, 116, 242, 0.1); }
     textarea { resize: vertical; min-height: 100px; }
     .input-group { margin-bottom: 15px; }
-    /* Buttons */
     .btn-group { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
     .btn { padding: 8px 14px; font-size: 0.85rem; font-weight: 500; border-radius: var(--border-radius); border: none; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; width: auto; }
     .btn i { margin-right: 6px; }
@@ -48,37 +45,44 @@
     .btn-outline { background: white; color: var(--primary); border: 1px solid var(--gray-300); } .btn-outline:hover { border-color: var(--primary); background: var(--primary-light); }
     .btn-success { background: var(--success); color: white; } .btn-success:hover { background: #28a960; }
     .btn:disabled { background-color: var(--gray-300); cursor: not-allowed; opacity: 0.7; }
-    /* Status & Messages */
     .status { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; color: var(--gray-600); background: var(--gray-200); margin-left: 10px; }
     .message { padding: 10px; border-radius: 6px; margin-top: 12px; font-size: 0.85rem; font-weight: 500; display: none; word-break: break-word; }
     .message-success { background: var(--success-light); color: var(--success); }
     .message-warning { background: var(--warning-light); color: var(--warning); }
     .message-error { background: var(--danger-light); color: var(--danger); }
     .message-info { background: var(--primary-light); color: var(--primary); border-left: 4px solid var(--primary);}
-    /* QR Scanner */
     .no-print { @media print { display: none !important; } }
     #scanner-container { display: none; position: relative; max-width: 300px; margin: 15px auto 0; border: 1px solid var(--gray-300); border-radius: var(--border-radius); overflow: hidden; }
     #scanner-video { display: block; width: 100%; height: auto; }
-    /* Empty State */
     .empty-state { text-align: center; padding: 1.5rem; color: var(--gray-500); }
     .empty-state i { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.6; display: block; }
     .empty-state-message { font-size: 1rem; font-weight: 500; margin-bottom: 0.25rem; }
     .empty-state-description { font-size: 0.85rem; }
-    /* Responsive */
-    @media (max-width: 480px) { .header { padding: 12px 0; } .header-title { font-size: 1.1rem; } .header-actions { flex-direction: column; align-items: flex-start; gap: 10px; } .logout-btn { width: 100%; justify-content: center; } .card-body { padding: 12px; } .btn { padding: 8px 12px; font-size: 0.8rem; } .patient-info { grid-template-columns: 1fr 1fr; } .btn-group { gap: 6px; } #scanner-container { max-width: 100%; } }
+
+     @media (max-width: 480px) {
+       .header { justify-content: center; /* Center items when stacking */ }
+       .header-main-content { width: 100%; justify-content: center; margin-bottom: 10px; }
+       .header-logout { width: 100%; }
+       .logout-btn { width: 100%; justify-content: center; }
+       .card-body { padding: 12px; }
+       .btn { padding: 8px 12px; font-size: 0.8rem; }
+       .patient-info { grid-template-columns: 1fr 1fr; }
+       .btn-group { gap: 6px; }
+       #scanner-container { max-width: 100%; }
+    }
   </style>
 </head>
 <body >
   <div class="container">
     <!-- MODIFIED HEADER STRUCTURE -->
     <div class="header">
-        <div class="header-main-title">
-             <h1 class="header-title">🩺 Espace Infirmier</h1>
-        </div>
-        <div class="header-actions">
+        <div class="header-main-content">
             <div class="logo">
-                 <img src="clinique-nakhil-logo-horizontal.webp" alt="MediClinic Logo" class="logo-img"> <!-- UPDATE SRC -->
+                <img src="clinique-nakhil-logo-horizontal.webp" alt="MediClinic Logo" class="logo-img"> <!-- ADJUST SRC -->
             </div>
+            <h1 class="header-title">🩺 Espace Infirmier</h1>
+        </div>
+        <div class="header-logout">
             <button onclick="logout()" title="Déconnexion" class="btn btn-outline logout-btn no-print">
                 <i class="fas fa-sign-out-alt"></i> Déconnexion
             </button>
@@ -86,42 +90,33 @@
     </div>
     <!-- END MODIFIED HEADER STRUCTURE -->
 
-
     <!-- QR Scanner Card -->
     <div class="card no-print">
-         <div class="card-header"> <h2 class="card-title"> <i class="fas fa-qrcode"></i> Scanner Patient </h2> <div class="card-actions"> <i class="fas fa-camera"></i> </div> </div>
-          <div class="card-body">
+        <div class="card-header"> <h2 class="card-title"> <i class="fas fa-qrcode"></i> Scanner Patient </h2> <div class="card-actions"> <i class="fas fa-camera"></i> </div> </div>
+        <div class="card-body">
             <div class="qr-scanner-section">
-                <div class="btn-group">
-                    <button id="scanQrButton" class="btn btn-primary"> <i class="fas fa-qrcode"></i> Scanner QR </button>
-                </div>
-                <div id="scanner-container">
-                   <video id="scanner-video" playsinline></video>
-                </div>
-                <!-- Scan status shown in #obsMessage -->
+                <div class="btn-group"> <button id="scanQrButton" class="btn btn-primary"> <i class="fas fa-qrcode"></i> Scanner QR </button> </div>
+                <div id="scanner-container"> <video id="scanner-video" playsinline></video> </div>
+                <!-- Scan status in #obsMessage -->
             </div>
-         </div>
-     </div>
+        </div>
+    </div>
 
     <!-- Patient Info Card -->
     <div class="card">
-      <div class="card-header"> <h2 class="card-title"> <i class="fas fa-user-circle"></i> Informations du Patient </h2> <div class="card-actions"> <i class="fas fa-user"></i> </div> </div>
-      <div class="card-body">
-          <div id="patientInfo" class="patient-info">
-              <div class="empty-state" style="grid-column: 1 / -1;"> <i class="fas fa-qrcode"></i> <div class="empty-state-message">Prêt à scanner</div> <div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div> </div>
-          </div>
-      </div>
+        <div class="card-header"> <h2 class="card-title"> <i class="fas fa-user-circle"></i> Informations du Patient </h2> <div class="card-actions"> <i class="fas fa-user"></i> </div> </div>
+        <div class="card-body"> <div id="patientInfo" class="patient-info"> <div class="empty-state" style="grid-column: 1 / -1;"> <i class="fas fa-qrcode"></i> <div class="empty-state-message">Prêt à scanner</div> <div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div> </div> </div> </div>
     </div>
 
     <!-- Observation Card -->
     <div class="card">
-      <div class="card-header"> <h2 class="card-title"> <i class="fas fa-notes-medical"></i> Observation Infirmier </h2> <div class="card-actions"> <i class="fas fa-clipboard-list"></i> </div> </div>
-      <div class="card-body" id="observationCardBody" style="opacity: 0.5; pointer-events: none;"> <!-- Initially disabled -->
-        <div class="input-group"> <textarea id="observationInput" placeholder="Saisir ou dicter l'observation ici..." disabled></textarea> </div>
-        <div class="btn-group"> <button class="btn btn-outline" id="startObservationBtn" onclick="startRecording()" disabled> <i class="fas fa-microphone"></i> Démarrer </button> <button class="btn btn-outline" onclick="stopRecording()" disabled> <i class="fas fa-stop-circle"></i> Arrêter </button> <span id="observationStatus" class="status"></span> </div>
-        <div class="btn-group"> <button class="btn btn-success" onclick="submitObservation()" disabled> <i class="fas fa-check-circle"></i> Enregistrer </button> </div>
-        <div id="obsMessage" class="message"></div> <!-- Observation submit & Scan status messages appear here -->
-      </div>
+        <div class="card-header"> <h2 class="card-title"> <i class="fas fa-notes-medical"></i> Observation Infirmier </h2> <div class="card-actions"> <i class="fas fa-clipboard-list"></i> </div> </div>
+        <div class="card-body" id="observationCardBody" style="opacity: 0.5; pointer-events: none;">
+            <div class="input-group"> <textarea id="observationInput" placeholder="Saisir ou dicter l'observation ici..." disabled></textarea> </div>
+            <div class="btn-group"> <button class="btn btn-outline" id="startObservationBtn" onclick="startRecording()" disabled> <i class="fas fa-microphone"></i> Démarrer </button> <button class="btn btn-outline" onclick="stopRecording()" disabled> <i class="fas fa-stop-circle"></i> Arrêter </button> <span id="observationStatus" class="status"></span> </div>
+            <div class="btn-group"> <button class="btn btn-success" onclick="submitObservation()" disabled> <i class="fas fa-check-circle"></i> Enregistrer </button> </div>
+            <div id="obsMessage" class="message"></div>
+        </div>
     </div>
 
   </div> <!-- End Container -->
@@ -150,26 +145,7 @@
     // --- Auth & Helpers ---
     function fetchWithAuth(url, options={}) { const token = localStorage.getItem('authToken'); if (!token) { console.error('Nurse: No token.'); alert('Session expirée.'); window.location.href = LOGIN_PAGE_URL; return Promise.reject(new Error('Token non trouvé.')); } const headers = { ...options.headers, 'Authorization': `Bearer ${token}` }; if (options.body && !(options.body instanceof FormData)) { headers['Content-Type'] = 'application/json'; } else if (options.body instanceof FormData) { delete headers['Content-Type']; } return fetch(url, { ...options, headers: headers }) .then(response => { if (response.status === 401 || response.status === 403) { console.error('Nurse: Auth error:', response.status); localStorage.removeItem('authToken'); alert('Session invalide.'); window.location.href = LOGIN_PAGE_URL; throw new Error(`Auth failed: ${response.status}`); } if (!response.ok) { return response.text().then(text => { throw new Error(`Erreur ${response.status}: ${text || response.statusText}`); }); } return response; }); }
     function logout() { localStorage.removeItem('authToken'); alert('Déconnecté.'); window.location.href = LOGIN_PAGE_URL; }
-
-    // *** Added showMessage Function (Includes icon logic) ***
-     function showMessage(elementId, message, type) {
-        const messageElement = document.getElementById(elementId);
-        if (!messageElement) { console.error(`Msg Elem "${elementId}" not found.`); return; }
-        const statusIcons = {'info':'fas fa-info-circle','success':'fas fa-check-circle','warning':'fas fa-exclamation-triangle','error':'fas fa-times-circle','loading':'fas fa-spinner fa-spin'};
-        const iconClass = statusIcons[type] || statusIcons['info'];
-        const iconHtml = message ? `<i class="${iconClass} me-2"></i>` : '';
-        messageElement.innerHTML = message ? `${iconHtml}${message}` : "";
-        messageElement.style.display = message ? "block" : "none";
-        messageElement.className = 'message'; // Reset class
-        if (type === "success") messageElement.classList.add("message-success");
-        else if (type === "warning") messageElement.classList.add("message-warning");
-        else if (type === "error") messageElement.classList.add("message-error");
-        else if (type === "info") messageElement.classList.add("message-info");
-        // Auto-hide success messages, keep others unless cleared
-        if (type === "success" && message) {
-             setTimeout(() => { if (messageElement.innerHTML.includes(message)) { messageElement.style.display = 'none'; } }, 5000);
-        }
-    }
+    function showMessage(elementId, message, type) { const messageElement = document.getElementById(elementId); if (!messageElement) { console.error(`Msg Elem "${elementId}" not found.`); return; } const statusIcons = {'info':'fas fa-info-circle','success':'fas fa-check-circle','warning':'fas fa-exclamation-triangle','error':'fas fa-times-circle','loading':'fas fa-spinner fa-spin'}; const iconClass = statusIcons[type] || statusIcons['info']; const iconHtml = message ? `<i class="${iconClass} me-2"></i>` : ''; messageElement.innerHTML = message ? `${iconHtml}${message}` : ""; messageElement.style.display = message ? "block" : "none"; messageElement.className = 'message'; if (type === "success") messageElement.classList.add("message-success"); else if (type === "warning") messageElement.classList.add("message-warning"); else if (type === "error") messageElement.classList.add("message-error"); else if (type === "info") messageElement.classList.add("message-info"); if (type === "success" && message && elementId !== 'obsMessage') { setTimeout(() => { if (messageElement.innerHTML.includes(message)) { messageElement.style.display = 'none'; } }, 5000); } else if (type !== 'error' && type !== 'warning' && type !== 'loading' && elementId === 'obsMessage') { setTimeout(() => { if (messageElement.innerHTML.includes(message)) { messageElement.style.display = 'none'; } }, 7000); } }
 
     // --- Enable/Disable Observation Section ---
     function enableObservationSection(enable) { const cardBody=observationCardBody, obsInput=observationInput, startBtn=startObservationBtn, stopBtn=stopObservationBtn, saveBtn=submitObservationBtn; if(!cardBody || !obsInput || !startBtn || !stopBtn || !saveBtn) return; if(enable) { cardBody.style.opacity = '1'; cardBody.style.pointerEvents = 'auto'; obsInput.disabled = false; startBtn.disabled = false; stopBtn.disabled = false; saveBtn.disabled = false; } else { cardBody.style.opacity = '0.5'; cardBody.style.pointerEvents = 'none'; obsInput.disabled = true; obsInput.value = ''; startBtn.disabled = true; stopBtn.disabled = true; saveBtn.disabled = true; showMessage('obsMessage', '', ''); document.getElementById("observationStatus").innerHTML = ''; } }
@@ -191,10 +167,10 @@
     const scanButton = document.getElementById('scanQrButton');
     const scannerContainer = document.getElementById('scanner-container');
     const video = document.getElementById('scanner-video');
-    // Use obsMessageDiv for scan status
+    // const scanResultDiv = document.getElementById("scanResult"); // Now using obsMessageDiv
     let scanning = false; let currentStream = null; let scanTimeout = null;
 
-    // Uses showMessage to display status in #obsMessage
+    // ** Uses showMessage to display status in #obsMessage **
     function updateScanStatus(message, type = 'info') { showMessage('obsMessage', message, type); }
 
     if (scanButton) { scanButton.onclick = async () => { if (!scanning) { try { showMessage('obsMessage', '', ''); updateScanStatus(''); scannerContainer.style.display = 'block'; updateScanStatus('Recherche caméra...', 'loading'); currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); video.srcObject = currentStream; await video.play(); updateScanStatus('Caméra prête. Scannez le code.', 'info'); scanButton.innerHTML = '<i class="fas fa-stop-circle"></i> Arrêter Scan'; scanButton.classList.replace('btn-primary','btn-danger'); scanning = true; clearTimeout(scanTimeout); scanTimeout = setTimeout(() => { if (scanning) { updateScanStatus('Aucun code détecté.', 'warning'); stopScanner(); } }, 30000); requestAnimationFrame(tick); } catch (err) { console.error("Cam Err:", err); updateScanStatus(`Err Cam: ${err.message}`, 'error'); stopScanner(); } } else { stopScanner(); updateScanStatus('Scan arrêté.', 'info'); } }; } else { console.warn("Scan button not found."); }
@@ -215,22 +191,14 @@
         } catch (e) { updateScanStatus(`Erreur: Format QR invalide (${e.message}).`, 'error'); }
     }
 
-    // This is the key function called after scan succeeds
+    // This function loads data AFTER scan succeeds
     function loadPatientIntoCurrentDashboard(scannedIpp) {
         console.log(`Loading patient ${scannedIpp} into Nurse dashboard via QR`);
         currentIPP = scannedIpp; // Update global IPP
-
-        // Update URL (optional)
         try { const newUrl = new URL(window.location); newUrl.searchParams.set('ipp', scannedIpp); window.history.pushState({ ipp: scannedIpp }, '', newUrl); } catch(e) { console.error("History API err:", e); }
-
-        // Call main load patient function for this IPP
-        loadPatient(scannedIpp); // This loads patient info & enables observation section
-
-        // Clear observation field explicitly
-        if(observationInput) observationInput.value = '';
-        // Clear scan message OR obs message after delay
-        setTimeout(() => { showMessage('obsMessage', '', ''); }, 4000);
-        // Scroll to patient info section
+        loadPatient(scannedIpp); // Load patient info & enable observation section
+        if(observationInput) observationInput.value = ''; // Clear observation field
+        setTimeout(() => { showMessage('obsMessage', '', ''); }, 4000); // Clear scan status message
         document.getElementById('patientInfo')?.parentElement?.parentElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     // --- END QR SCANNER CODE ---
@@ -240,20 +208,10 @@
     window.onload = () => {
       if (!localStorage.getItem('authToken')) { console.log("Nurse Dash: No auth token..."); window.location.href = LOGIN_PAGE_URL; return; }
        document.body.classList.add('loaded'); console.log("Nurse auth OK.");
-
        const urlParams = new URLSearchParams(window.location.search);
        const ippFromUrl = urlParams.get("ipp");
-
-       if (ippFromUrl) { // Load patient if IPP is in URL
-           console.log(`IPP in URL: ${ippFromUrl}. Loading initial data.`);
-           currentIPP = ippFromUrl;
-           loadPatient(currentIPP); // Load data for this IPP
-       } else { // No IPP in URL, show empty state
-           console.log("No initial IPP. Waiting scan.");
-           document.getElementById('patientInfo').innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-qrcode"></i><div class="empty-state-message">Prêt à scanner</div><div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div></div>';
-           enableObservationSection(false); // Keep observation section disabled
-       }
-       // Attach general listeners if any (already handled by onclick)
+       if (ippFromUrl) { console.log(`IPP in URL: ${ippFromUrl}. Loading initial data.`); currentIPP = ippFromUrl; loadPatient(currentIPP); }
+       else { console.log("No initial IPP. Waiting scan."); document.getElementById('patientInfo').innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-qrcode"></i><div class="empty-state-message">Prêt à scanner</div><div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div></div>'; enableObservationSection(false); }
     };
 
   </script>
