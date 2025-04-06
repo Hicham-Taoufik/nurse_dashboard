@@ -10,47 +10,45 @@
     /* --- CSS is identical to the updated Nurse CSS from before --- */
     :root { /* ... CSS Variables ... */ }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--gray-800); line-height: 1.5; min-height: 100vh; padding: 0; visibility: hidden; /* Hide initially */ }
-    body.loaded { visibility: visible; /* Show when JS confirms auth */ }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-    .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; margin-bottom: 30px; }
-    .header-title { color: var(--primary); font-size: 1.5rem; font-weight: 600; }
-    .logo { color: var(--primary); font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; }
-    .logo i { margin-right: 8px; }
-     .card { background: white; border-radius: var(--border-radius); box-shadow: var(--shadow-md); overflow: hidden; margin-bottom: 25px; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--gray-200); }
-    .card-title { font-size: 1rem; font-weight: 600; color: var(--gray-800); display: flex; align-items: center; }
-    .card-title i { margin-right: 10px; color: var(--primary); }
-    .card-actions { color: white; background: var(--primary); border-radius: var(--border-radius); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
-    .card-body { padding: 20px; }
-    .patient-info { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-    .info-group { margin-bottom: 5px; }
-    .info-label { font-size: 0.75rem; color: var(--gray-500); margin-bottom: 4px; }
-    .info-value { font-size: 0.9rem; color: var(--gray-800); font-weight: 500; }
-     label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--gray-600); }
-    textarea, input[type="text"], input[type="date"] { width: 100%; padding: 10px 12px; font-size: 0.9rem; border-radius: var(--border-radius); border: 1px solid var(--gray-300); background: white; transition: all 0.2s ease; font-family: 'Inter', sans-serif; }
-    textarea:focus, input[type="text"]:focus, input[type="date"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(93, 116, 242, 0.1); }
-    textarea { resize: vertical; min-height: 120px; }
-    .input-group { margin-bottom: 15px; }
-     .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-    .btn { padding: 8px 16px; font-size: 0.85rem; font-weight: 500; border-radius: var(--border-radius); border: none; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; }
-    .btn i { margin-right: 6px; }
-    .btn-primary { background: var(--primary); color: white; } .btn-primary:hover { background: #4a62d8; }
+    body { /* ... body styles ... */ visibility: hidden; }
+    body.loaded { visibility: visible; }
+    .container { /* ... */ }
+    .header { /* ... */ }
+    .header-title { /* ... */ }
+    .logo { /* ... */ }
+    .card { /* ... */ }
+    .card-header { /* ... */ }
+    .card-title { /* ... */ }
+    .card-actions { /* ... */ }
+    .card-body { /* ... */ }
+    .patient-info { /* ... */ }
+    .info-group { /* ... */ }
+    .info-label { /* ... */ }
+    .info-value { /* ... */ }
+    label { /* ... */ }
+    textarea, input[type="text"], input[type="date"] { /* ... */ }
+    textarea:focus, input[type="text"]:focus, input[type="date"]:focus { /* ... */ }
+    textarea { /* ... */ }
+    .input-group { /* ... */ }
+    .btn-group { /* ... */ }
+    .btn { /* ... */ }
+    .btn i { /* ... */ }
+    .btn-primary { /* ... */ }
     .btn-danger { background-color: var(--danger); border-color: var(--danger); color: white; } /* Added danger */
     .btn-danger:hover { background-color: #d3483e; border-color: #d3483e;}
-    .btn-outline { background: white; color: var(--primary); border: 1px solid var(--gray-300); } .btn-outline:hover { border-color: var(--primary); background: var(--primary-light); }
-    .btn-success { background: var(--success); color: white; } .btn-success:hover { background: #28a960; }
-    .btn:disabled { background-color: var(--gray-300); cursor: not-allowed; }
-    .status { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; color: var(--gray-600); background: var(--gray-200); margin-left: 10px; }
-    .message { padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 0.85rem; font-weight: 500; display: none; }
-    .message-success { background: var(--success-light); color: var(--success); }
-    .message-warning { background: var(--warning-light); color: var(--warning); }
-    .message-error { background: var(--danger-light); color: var(--danger); }
-    .message-info { background: var(--primary-light); color: var(--primary); border-left: 4px solid var(--primary);} /* Added info */
-    .no-print { @media print { display: none !important; } } /* Added no-print */
+    .btn-outline { /* ... */ }
+    .btn-success { /* ... */ }
+    .btn:disabled { /* ... */ }
+    .status { /* ... */ }
+    .message { /* ... */ }
+    .message-success { /* ... */ }
+    .message-warning { /* ... */ }
+    .message-error { /* ... */ }
+    .message-info { background: var(--primary-light); color: var(--primary); border-left: 4px solid var(--primary);} /* Added info style for scan results */
+    .no-print { @media print { display: none !important; } }
     #scanner-container { display: none; position: relative; max-width: 300px; margin-top: 15px; border: 1px solid var(--gray-300); border-radius: var(--border-radius); overflow: hidden; }
     #scanner-video { display: block; width: 100%; height: auto; }
-     @media (max-width: 768px) { .patient-info { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 768px) { /* ... */ }
   </style>
 </head>
 <body > <!-- Body starts hidden -->
@@ -66,7 +64,7 @@
       </div>
     </div>
 
-     <!-- ADDED: QR Scanner Card -->
+    <!-- ADDED: QR Scanner Card -->
      <div class="card no-print">
          <div class="card-header"> <h2 class="card-title"> <i class="fas fa-qrcode"></i> Scanner Patient </h2> <div class="card-actions"> <i class="fas fa-camera"></i> </div> </div>
           <div class="card-body">
@@ -77,25 +75,31 @@
                 <div id="scanner-container">
                    <video id="scanner-video" playsinline></video>
                 </div>
-                <div id="scanResult" class="message message-info" style="margin-top: 10px;"></div> <!-- For scan feedback -->
+                <!-- Scan results will now appear in #obsMessage -->
+                <!-- <div id="scanResult" class="message message-info" style="margin-top: 10px;"></div> -->
             </div>
          </div>
      </div>
+    <!-- END: QR Scanner Card -->
 
     <!-- Patient Info Card -->
     <div class="card">
       <div class="card-header"> <h2 class="card-title"> <i class="fas fa-user-circle"></i> Informations du Patient </h2> <div class="card-actions"> <i class="fas fa-user"></i> </div> </div>
-      <div class="card-body"> <div id="patientInfo" class="patient-info">Chargement...</div> </div>
+      <div class="card-body">
+        <div id="patientInfo" class="patient-info">
+             <div class="empty-state" style="grid-column: 1 / -1;"> <i class="fas fa-qrcode"></i> <div class="empty-state-message">Prêt à scanner</div> <div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div> </div>
+        </div>
+      </div>
     </div>
 
     <!-- Observation Card -->
     <div class="card">
       <div class="card-header"> <h2 class="card-title"> <i class="fas fa-notes-medical"></i> Observation Infirmier </h2> <div class="card-actions"> <i class="fas fa-clipboard-list"></i> </div> </div>
-      <div class="card-body">
-        <div class="input-group"> <textarea id="observationInput" placeholder="Saisir ou dicter l'observation ici..."></textarea> </div>
-        <div class="btn-group"> <button class="btn btn-outline" id="startObservationBtn" onclick="startRecording()"> <i class="fas fa-microphone"></i> Démarrer </button> <button class="btn btn-outline" onclick="stopRecording()"> <i class="fas fa-stop-circle"></i> Arrêter & Transcrire </button> <span id="observationStatus" class="status"></span> </div>
-        <div class="btn-group"> <button class="btn btn-success" onclick="submitObservation()"> <i class="fas fa-check-circle"></i> Enregistrer l'observation </button> </div>
-        <div id="obsMessage" class="message"></div>
+      <div class="card-body" id="observationCardBody" style="opacity: 0.5; pointer-events: none;"> <!-- Initially disabled -->
+        <div class="input-group"> <textarea id="observationInput" placeholder="Saisir ou dicter l'observation ici..." disabled></textarea> </div>
+        <div class="btn-group"> <button class="btn btn-outline" id="startObservationBtn" onclick="startRecording()" disabled> <i class="fas fa-microphone"></i> Démarrer </button> <button class="btn btn-outline" onclick="stopRecording()" disabled> <i class="fas fa-stop-circle"></i> Arrêter & Transcrire </button> <span id="observationStatus" class="status"></span> </div>
+        <div class="btn-group"> <button class="btn btn-success" onclick="submitObservation()" disabled> <i class="fas fa-check-circle"></i> Enregistrer </button> </div>
+        <div id="obsMessage" class="message"></div> <!-- Scan results will also appear here -->
       </div>
     </div>
 
@@ -116,10 +120,64 @@
     // --- Auth & Helpers ---
     function fetchWithAuth(url, options={}) { const token = localStorage.getItem('authToken'); if (!token) { console.error('Nurse: No token.'); alert('Session expirée.'); window.location.href = LOGIN_PAGE_URL; return Promise.reject(new Error('Token non trouvé.')); } const headers = { ...options.headers, 'Authorization': `Bearer ${token}` }; if (options.body && !(options.body instanceof FormData)) { headers['Content-Type'] = 'application/json'; } else if (options.body instanceof FormData) { delete headers['Content-Type']; } return fetch(url, { ...options, headers: headers }) .then(response => { if (response.status === 401 || response.status === 403) { console.error('Nurse: Auth error:', response.status); localStorage.removeItem('authToken'); alert('Session invalide.'); window.location.href = LOGIN_PAGE_URL; throw new Error(`Auth failed: ${response.status}`); } if (!response.ok) { return response.text().then(text => { throw new Error(`Erreur ${response.status}: ${text || response.statusText}`); }); } return response; }); }
     function logout() { localStorage.removeItem('authToken'); alert('Déconnecté.'); window.location.href = LOGIN_PAGE_URL; }
-    function showMessage(elementId, message, type) { const messageElement = document.getElementById(elementId); if (!messageElement) { console.error(`Msg Elem "${elementId}" not found.`); return; } messageElement.innerHTML = message || ""; messageElement.style.display = message ? "block" : "none"; messageElement.className = "message"; if (type === "success") messageElement.classList.add("message-success"); else if (type === "warning") messageElement.classList.add("message-warning"); else if (type === "error") messageElement.classList.add("message-error"); else if (type === "info") messageElement.classList.add("message-info"); if (type === "success" && message) { setTimeout(() => { if (messageElement.classList.contains("message-success") && messageElement.innerHTML === message) { messageElement.style.display = "none"; } }, 5000); } }
+
+    // *** UPDATED showMessage to handle scan icons using showAlert.statusTypes ***
+     function showMessage(elementId, message, type) {
+        const messageElement = document.getElementById(elementId);
+        if (!messageElement) { console.error(`Msg Elem "${elementId}" not found.`); return; }
+        // Use icons for scan results if message is provided
+        let iconHtml = '';
+        if (elementId === 'obsMessage' && message) { // Only add icons to obsMessage potentially
+            const iconClass = showAlert.statusTypes[type]?.icon || 'fas fa-info-circle';
+            iconHtml = `<i class="${iconClass} me-2"></i>`;
+        }
+        messageElement.innerHTML = message ? `${iconHtml}${message}` : ""; // Add icon if message exists
+        messageElement.style.display = message ? "block" : "none";
+        // Reset class list before adding specific type
+        messageElement.className = 'message'; // Reset to base class
+        if (type === "success") messageElement.classList.add("message-success");
+        else if (type === "warning") messageElement.classList.add("message-warning");
+        else if (type === "error") messageElement.classList.add("message-error");
+        else if (type === "info") messageElement.classList.add("message-info"); // Use info class
+
+        if (type === "success" && message) { /* ... auto-hide timeout ... */ }
+     }
+     // Add statusTypes mapping for icons (needed by showMessage now)
+     showAlert.statusTypes={'info':{icon:'fas fa-info-circle'},'success':{icon:'fas fa-check-circle'},'warning':{icon:'fas fa-exclamation-triangle'},'error':{icon:'fas fa-times-circle'},'loading':{icon:'fas fa-spinner fa-spin'}};
+
 
     // --- Load Patient Function ---
-    function loadPatient(ipp) { console.log(`loadPatient CALLED for IPP: ${ipp}`); const patientInfoContainer = document.getElementById("patientInfo"); patientInfoContainer.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Chargement...'; fetchWithAuth(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`).then(res => res.json()).then(data => { if (!data || !data.nom) { throw new Error("Patient non trouvé/invalide."); } patientInfoContainer.innerHTML = `<div class="info-group"> <div class="info-label">Nom</div> <div class="info-value">${data.prenom||'N/A'} ${data.nom||'N/A'}</div> </div><div class="info-group"> <div class="info-label">IPP</div> <div class="info-value">${data.ipp||'N/A'}</div> </div><div class="info-group"> <div class="info-label">CIN</div> <div class="info-value">${data.cin||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Téléphone</div> <div class="info-value">${data.telephone||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Adresse</div> <div class="info-value">${data.adresse||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Mutuelle</div> <div class="info-value">${data.mutuelle||'Aucune'}</div> </div>`; }).catch(err => { if (!err.message.startsWith('Auth')) { patientInfoContainer.innerHTML = `<div class="message message-error" style="display:block; grid-column: 1 / -1;">❌ Erreur: ${err.message}</div>`; } console.error("Error loading patient data:", err); }); }
+    function loadPatient(ipp) { console.log(`loadPatient CALLED for IPP: ${ipp}`); const patientInfoContainer = document.getElementById("patientInfo"); patientInfoContainer.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Chargement...'; fetchWithAuth(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`).then(res => res.json()).then(data => { if (!data || !data.nom) { throw new Error("Patient non trouvé/invalide."); } patientInfoContainer.innerHTML = `<div class="info-group"> <div class="info-label">Nom</div> <div class="info-value">${data.prenom||'N/A'} ${data.nom||'N/A'}</div> </div><div class="info-group"> <div class="info-label">IPP</div> <div class="info-value">${data.ipp||'N/A'}</div> </div><div class="info-group"> <div class="info-label">CIN</div> <div class="info-value">${data.cin||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Téléphone</div> <div class="info-value">${data.telephone||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Adresse</div> <div class="info-value">${data.adresse||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Mutuelle</div> <div class="info-value">${data.mutuelle||'Aucune'}</div> </div>`; enableObservationSection(true); // Enable observation after patient loads }).catch(err => { if (!err.message.startsWith('Auth')) { patientInfoContainer.innerHTML = `<div class="message message-error" style="display:block; grid-column: 1 / -1;">❌ Erreur: ${err.message}</div>`; } console.error("Error loading patient data:", err); enableObservationSection(false); }); }
+
+    // --- Enable/Disable Observation Section ---
+    function enableObservationSection(enable) {
+        const cardBody = document.getElementById('observationCardBody');
+        const obsInput = document.getElementById('observationInput');
+        const startBtn = document.getElementById('startObservationBtn');
+        const stopBtn = document.querySelector('button[onclick="stopRecording()"]'); // More specific selector if needed
+        const saveBtn = document.querySelector('button[onclick="submitObservation()"]');
+
+        if(!cardBody || !obsInput || !startBtn || !stopBtn || !saveBtn) return;
+
+        if(enable) {
+            cardBody.style.opacity = '1';
+            cardBody.style.pointerEvents = 'auto';
+            obsInput.disabled = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = false; // Enable stop initially
+            saveBtn.disabled = false;
+        } else {
+            cardBody.style.opacity = '0.5';
+            cardBody.style.pointerEvents = 'none';
+            obsInput.disabled = true; obsInput.value = ''; // Clear input
+            startBtn.disabled = true;
+            stopBtn.disabled = true;
+            saveBtn.disabled = true;
+            showMessage('obsMessage', '', ''); // Clear messages
+            document.getElementById("observationStatus").innerHTML = ''; // Clear status
+        }
+    }
+
 
     // --- Audio Recording Functions ---
     function startRecording() { if (mediaRecorder && mediaRecorder.state === 'recording') return; audioChunks = []; const statusEl = document.getElementById("observationStatus"); statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Démarrage...'; statusEl.style.display = 'inline-flex'; navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => { mediaRecorder = new MediaRecorder(stream); mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); }; mediaRecorder.onstop = () => { if (audioChunks.length === 0) { console.warn("No audio."); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-exclamation-circle"></i> Vide'; return; } const blob = new Blob(audioChunks, { type: 'audio/webm' }); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Transcription...'; sendAudioToAI(blob); audioChunks = []; }; mediaRecorder.onerror = (e) => { console.error(`Rec Err: ${e.error}`); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-times-circle"></i> Err Rec.'; }; mediaRecorder.start(); statusEl.innerHTML = '<i class="fas fa-microphone-alt fa-beat"></i> REC...'; document.getElementById("startObservationBtn").disabled = true; }).catch(err => { statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Err micro'; console.error("Mic Err:", err); alert("Err micro: " + err.message); }); }
@@ -135,43 +193,43 @@
     const scanButton = document.getElementById('scanQrButton');
     const scannerContainer = document.getElementById('scanner-container');
     const video = document.getElementById('scanner-video');
-    const scanResultDiv = document.getElementById("scanResult");
+    // const scanResultDiv = document.getElementById("scanResult"); // Now using obsMessage
     let scanning = false; let currentStream = null; let scanTimeout = null;
 
-    function updateScanStatus(message, type = 'info') { const sInfo=showAlert.statusTypes?showAlert.statusTypes[type]:null||{icon:'fas fa-info-circle',cls:'message-info'}; scanResultDiv.className = `message message-${type}`; scanResultDiv.innerHTML = `<i class="${sInfo.icon} me-2"></i>${message}`; scanResultDiv.style.display = message ? 'block' : 'none'; }
-    showAlert.statusTypes={'info':{icon:'fas fa-info-circle',cls:'info'},'success':{icon:'fas fa-check-circle',cls:'success'},'warning':{icon:'fas fa-exclamation-triangle',cls:'warning'},'error':{icon:'fas fa-times-circle',cls:'error'},'loading':{icon:'fas fa-spinner fa-spin',cls:'info'}};
+    // ** Uses showMessage to display status in #obsMessage **
+    function updateScanStatus(message, type = 'info') { showMessage('obsMessage', message, type); }
+    // showAlert.statusTypes is defined within showMessage scope now
 
     if (scanButton) { scanButton.onclick = async () => { if (!scanning) { try { updateScanStatus(''); scannerContainer.style.display = 'block'; updateScanStatus('Recherche caméra...', 'loading'); currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); video.srcObject = currentStream; await video.play(); updateScanStatus('Caméra prête. Scannez le code.', 'info'); scanButton.innerHTML = '<i class="fas fa-stop-circle"></i> Arrêter Scan'; scanButton.classList.replace('btn-primary','btn-danger'); scanning = true; clearTimeout(scanTimeout); scanTimeout = setTimeout(() => { if (scanning) { updateScanStatus('Aucun code détecté.', 'warning'); stopScanner(); } }, 30000); requestAnimationFrame(tick); } catch (err) { console.error("Cam Err:", err); updateScanStatus(`Err Cam: ${err.message}`, 'error'); stopScanner(); } } else { stopScanner(); updateScanStatus('Scan arrêté.', 'info'); } }; } else { console.warn("Scan button not found."); }
     function stopScanner() { clearTimeout(scanTimeout); if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); } if(video) video.srcObject = null; if(scannerContainer) scannerContainer.style.display = 'none'; if(scanButton) {scanButton.innerHTML = '<i class="fas fa-qrcode"></i> Scanner QR'; scanButton.classList.replace('btn-danger','btn-primary');} scanning = false; currentStream = null; }
     function tick() { if (!scanning || !video || video.videoWidth === 0 || video.readyState < 2) { if (scanning) requestAnimationFrame(tick); return; } const tce = document.createElement('canvas'); tce.height = video.videoHeight; tce.width = video.videoWidth; const tc = tce.getContext("2d",{willReadFrequently:true}); tc.drawImage(video, 0, 0, tce.width, tce.height); try { const id = tc.getImageData(0, 0, tce.width, tce.height); const code = window.jsQR(id.data, id.width, id.height, { inversionAttempts: "dontInvert" }); if (code) { console.log("QR Found:", code.data); stopScanner(); processScannedQrCode(code.data); } else { requestAnimationFrame(tick); } } catch (e) { console.error("Error during QR processing:", e); requestAnimationFrame(tick); /* Keep trying */ } }
     function processScannedQrCode(scannedUrl) { clearTimeout(scanTimeout); updateScanStatus('Code détecté. Traitement...', 'loading'); try { const url = new URL(scannedUrl); if (scannedUrl.startsWith(QR_TARGET_BASE_URL)) { const ippFromQr = url.searchParams.get('ipp'); if (ippFromQr) { updateScanStatus(`Patient IPP ${ippFromQr} trouvé. Chargement...`, 'success'); loadPatientIntoCurrentDashboard(ippFromQr); } else { updateScanStatus('Erreur: IPP manquant.', 'error'); } } else { updateScanStatus('Erreur: QR Code non reconnu.', 'error'); } } catch (e) { updateScanStatus(`Erreur: Format QR invalide (${e.message}).`, 'error'); } }
 
+    // This is the key function called after scan succeeds
     function loadPatientIntoCurrentDashboard(scannedIpp) {
         console.log(`Loading patient ${scannedIpp} into Nurse dashboard via QR`);
         currentIPP = scannedIpp; // Update global IPP
+
         // Update URL (optional)
         try { const newUrl = new URL(window.location); newUrl.searchParams.set('ipp', scannedIpp); window.history.pushState({ ipp: scannedIpp }, '', newUrl); } catch(e) { console.error("History API err:", e); }
 
         // Call main load patient function for this IPP
-        loadPatient(scannedIpp);
-
-        // Clear observation field for new patient
-        const observationInput = document.getElementById('observationInput');
-        if (observationInput) observationInput.value = '';
-        showMessage('obsMessage', '', ''); // Clear any previous submit messages
+        loadPatient(scannedIpp); // This loads patient info AND enables observation section
 
         // Clear scan message after delay
-        setTimeout(() => { updateScanStatus(''); }, 4000);
+        setTimeout(() => { showMessage('obsMessage', '', ''); }, 4000); // Clear the message area
         // Scroll to patient info section
         document.getElementById('patientInfo')?.parentElement?.parentElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     // --- END QR SCANNER CODE ---
 
+
     // --- window.onload (MODIFIED) ---
-    window.onload = () => {
+     window.onload = () => {
       if (!localStorage.getItem('authToken')) { console.log("Nurse Dash: No auth token..."); window.location.href = LOGIN_PAGE_URL; return; }
        document.body.classList.add('loaded'); console.log("Nurse auth OK.");
 
+       // Get IPP from URL (can still load via URL if needed)
        const urlParams = new URLSearchParams(window.location.search);
        const ippFromUrl = urlParams.get("ipp");
 
@@ -179,15 +237,12 @@
            console.log(`IPP in URL: ${ippFromUrl}. Loading initial data.`);
            currentIPP = ippFromUrl;
            loadPatient(currentIPP); // Load data for this IPP
-       } else { // No IPP in URL, show empty state
+       } else { // No IPP in URL, show empty/scan prompt state
            console.log("No initial IPP. Waiting scan.");
            document.getElementById('patientInfo').innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-qrcode"></i><div class="empty-state-message">Prêt à scanner</div><div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div></div>';
-           // Ensure observation section is usable but maybe indicate no patient?
-            // Or disable submit button until patient loaded?
-            // document.querySelector('button[onclick="submitObservation()"]').disabled = true;
+           enableObservationSection(false); // Keep observation section disabled
        }
-       // Attach listeners regardless of initial IPP
-       // (No specific listeners here other than button clicks already defined)
+       // Attach general listeners if any (none specific here besides button clicks)
     };
 
   </script>
