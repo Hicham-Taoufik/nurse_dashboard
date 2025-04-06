@@ -8,9 +8,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
   <style>
     /* --- CSS is identical to the updated Nurse CSS from before --- */
-    :root {
-      --primary: #5d74f2; --primary-light: #ebeffe; --success: #31c971; --success-light: #e0fbea; --warning: #ffb648; --warning-light: #fff8ec; --danger: #ff5a5a; --danger-light: #ffeded; --gray-100: #f9fafb; --gray-200: #f1f3f9; --gray-300: #e5e7eb; --gray-400: #d1d5db; --gray-500: #9ca3af; --gray-600: #6b7280; --gray-700: #4b5563; --gray-800: #374151; --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow-md: 0 4px 6px rgba(0,0,0,0.04); --border-radius: 8px;
-    }
+    :root { /* ... CSS Variables ... */ }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--gray-800); line-height: 1.5; min-height: 100vh; padding: 0; visibility: hidden; /* Hide initially */ }
     body.loaded { visibility: visible; /* Show when JS confirms auth */ }
@@ -38,6 +36,8 @@
     .btn { padding: 8px 16px; font-size: 0.85rem; font-weight: 500; border-radius: var(--border-radius); border: none; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; }
     .btn i { margin-right: 6px; }
     .btn-primary { background: var(--primary); color: white; } .btn-primary:hover { background: #4a62d8; }
+    .btn-danger { background-color: var(--danger); border-color: var(--danger); color: white; } /* Added danger */
+    .btn-danger:hover { background-color: #d3483e; border-color: #d3483e;}
     .btn-outline { background: white; color: var(--primary); border: 1px solid var(--gray-300); } .btn-outline:hover { border-color: var(--primary); background: var(--primary-light); }
     .btn-success { background: var(--success); color: white; } .btn-success:hover { background: #28a960; }
     .btn:disabled { background-color: var(--gray-300); cursor: not-allowed; }
@@ -46,6 +46,10 @@
     .message-success { background: var(--success-light); color: var(--success); }
     .message-warning { background: var(--warning-light); color: var(--warning); }
     .message-error { background: var(--danger-light); color: var(--danger); }
+    .message-info { background: var(--primary-light); color: var(--primary); border-left: 4px solid var(--primary);} /* Added info */
+    .no-print { @media print { display: none !important; } } /* Added no-print */
+    #scanner-container { display: none; position: relative; max-width: 300px; margin-top: 15px; border: 1px solid var(--gray-300); border-radius: var(--border-radius); overflow: hidden; }
+    #scanner-video { display: block; width: 100%; height: auto; }
      @media (max-width: 768px) { .patient-info { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
@@ -56,11 +60,27 @@
       <div class="logo">
         <i class="fas fa-user-nurse"></i> MediClinic <!-- Nurse icon -->
         <!-- Added Logout Button -->
-        <button onclick="logout()" style="margin-left: 20px; padding: 5px 10px; cursor: pointer;" title="Déconnexion" class="btn btn-outline">
+        <button onclick="logout()" style="margin-left: 20px; padding: 5px 10px; cursor: pointer;" title="Déconnexion" class="btn btn-outline no-print">
             <i class="fas fa-sign-out-alt"></i> Déconnexion
         </button>
       </div>
     </div>
+
+     <!-- ADDED: QR Scanner Card -->
+     <div class="card no-print">
+         <div class="card-header"> <h2 class="card-title"> <i class="fas fa-qrcode"></i> Scanner Patient </h2> <div class="card-actions"> <i class="fas fa-camera"></i> </div> </div>
+          <div class="card-body">
+            <div class="qr-scanner-section">
+                <div class="btn-group">
+                    <button id="scanQrButton" class="btn btn-primary"> <i class="fas fa-qrcode"></i> Scanner QR </button>
+                </div>
+                <div id="scanner-container">
+                   <video id="scanner-video" playsinline></video>
+                </div>
+                <div id="scanResult" class="message message-info" style="margin-top: 10px;"></div> <!-- For scan feedback -->
+            </div>
+         </div>
+     </div>
 
     <!-- Patient Info Card -->
     <div class="card">
@@ -81,150 +101,95 @@
 
   </div> <!-- End Container -->
 
+  <!-- ADDED: jsQR Library Script -->
+  <script src="./jsQR.js"></script> <!-- Make sure path is correct -->
+
   <script>
     const BASE_URL = 'https://workflows.aphelionxinnovations.com';
-    // *** ADD ABSOLUTE URL for the Login Page ***
-    const LOGIN_PAGE_URL = 'https://hicham-taoufik.github.io/login/'; // Crucial for cross-repo redirect
+    const LOGIN_PAGE_URL = 'https://hicham-taoufik.github.io/login/'; // Absolute URL
+    const QR_TARGET_BASE_URL = 'app://medilink/patient'; // MUST MATCH RECEPTION
 
     let currentIPP = null;
     let mediaRecorder;
     let audioChunks = [];
 
-    // --- fetchWithAuth Helper Function ---
-    function fetchWithAuth(url, options = {}) {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-            console.error('Nurse: Auth token not found. Redirecting to login.');
-            alert('Session expirée ou non connecté. Veuillez vous reconnecter.');
-            window.location.href = LOGIN_PAGE_URL; // Use absolute URL
-            return Promise.reject(new Error('Authentication token not found.'));
-        }
-        const headers = { ...options.headers, 'Authorization': `Bearer ${token}` };
-        if (options.body && !(options.body instanceof FormData)) { headers['Content-Type'] = 'application/json'; }
-        else if (options.body instanceof FormData) { delete headers['Content-Type']; }
-        return fetch(url, { ...options, headers: headers })
-            .then(response => {
-                if (response.status === 401 || response.status === 403) {
-                     console.error('Nurse: Auth error:', response.status); localStorage.removeItem('authToken'); alert('Session expirée ou invalide. Veuillez vous reconnecter.');
-                     window.location.href = LOGIN_PAGE_URL; // Use absolute URL
-                     throw new Error(`Authentication failed: ${response.status}`);
-                }
-                 if (!response.ok) { return response.text().then(text => { throw new Error(`Erreur ${response.status}: ${text || response.statusText}`); }); }
-                return response;
-            });
-    }
-
-    // --- Logout Function ---
-    function logout() {
-        localStorage.removeItem('authToken');
-        alert('Vous avez été déconnecté.');
-        window.location.href = LOGIN_PAGE_URL; // Use absolute URL
-    }
-
-    // --- window.onload Check ---
-    window.onload = () => {
-      if (!localStorage.getItem('authToken')) {
-          console.log("Nurse Dash: No auth token found, redirecting to login.");
-          window.location.href = LOGIN_PAGE_URL; // Use absolute URL
-          return;
-      }
-      document.body.classList.add('loaded'); // Make body visible
-      console.log("Nurse dashboard loaded with valid token.");
-
-      // Original onload logic
-      const urlParams = new URLSearchParams(window.location.search);
-      currentIPP = urlParams.get('ipp');
-      const patientInfoContainer = document.getElementById("patientInfo");
-
-      if (currentIPP) {
-        loadPatient(currentIPP); // Will use fetchWithAuth now
-      } else {
-        patientInfoContainer.innerHTML = `<div class="message message-warning" style="display:block; grid-column: 1 / -1;">❌ IPP non trouvé dans l'URL.</div>`;
-      }
-    };
+    // --- Auth & Helpers ---
+    function fetchWithAuth(url, options={}) { const token = localStorage.getItem('authToken'); if (!token) { console.error('Nurse: No token.'); alert('Session expirée.'); window.location.href = LOGIN_PAGE_URL; return Promise.reject(new Error('Token non trouvé.')); } const headers = { ...options.headers, 'Authorization': `Bearer ${token}` }; if (options.body && !(options.body instanceof FormData)) { headers['Content-Type'] = 'application/json'; } else if (options.body instanceof FormData) { delete headers['Content-Type']; } return fetch(url, { ...options, headers: headers }) .then(response => { if (response.status === 401 || response.status === 403) { console.error('Nurse: Auth error:', response.status); localStorage.removeItem('authToken'); alert('Session invalide.'); window.location.href = LOGIN_PAGE_URL; throw new Error(`Auth failed: ${response.status}`); } if (!response.ok) { return response.text().then(text => { throw new Error(`Erreur ${response.status}: ${text || response.statusText}`); }); } return response; }); }
+    function logout() { localStorage.removeItem('authToken'); alert('Déconnecté.'); window.location.href = LOGIN_PAGE_URL; }
+    function showMessage(elementId, message, type) { const messageElement = document.getElementById(elementId); if (!messageElement) { console.error(`Msg Elem "${elementId}" not found.`); return; } messageElement.innerHTML = message || ""; messageElement.style.display = message ? "block" : "none"; messageElement.className = "message"; if (type === "success") messageElement.classList.add("message-success"); else if (type === "warning") messageElement.classList.add("message-warning"); else if (type === "error") messageElement.classList.add("message-error"); else if (type === "info") messageElement.classList.add("message-info"); if (type === "success" && message) { setTimeout(() => { if (messageElement.classList.contains("message-success") && messageElement.innerHTML === message) { messageElement.style.display = "none"; } }, 5000); } }
 
     // --- Load Patient Function ---
-    function loadPatient(ipp) {
-      const patientInfoContainer = document.getElementById("patientInfo");
-      patientInfoContainer.innerHTML = 'Chargement...';
-      fetchWithAuth(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`) // Use fetchWithAuth, nurse endpoint
-        .then(res => res.json())
-        .then(data => {
-          if (!data || !data.nom) { throw new Error("Patient non trouvé/invalide."); }
-          patientInfoContainer.innerHTML = `
-            <div class="info-group"> <div class="info-label">Nom</div> <div class="info-value">${data.prenom||'N/A'} ${data.nom||'N/A'}</div> </div>
-            <div class="info-group"> <div class="info-label">IPP</div> <div class="info-value">${data.ipp||'N/A'}</div> </div>
-            <div class="info-group"> <div class="info-label">CIN</div> <div class="info-value">${data.cin||'N/A'}</div> </div>
-            <div class="info-group"> <div class="info-label">Téléphone</div> <div class="info-value">${data.telephone||'N/A'}</div> </div>
-            <div class="info-group"> <div class="info-label">Adresse</div> <div class="info-value">${data.adresse||'N/A'}</div> </div>
-            <div class="info-group"> <div class="info-label">Mutuelle</div> <div class="info-value">${data.mutuelle||'Aucune'}</div> </div>`;
-        })
-        .catch(err => { if (!err.message.startsWith('Auth')) { patientInfoContainer.innerHTML = `<div class="message message-error" style="display:block; grid-column: 1 / -1;">❌ Erreur: ${err.message}</div>`; } console.error("Error loading patient data:", err); });
-    }
+    function loadPatient(ipp) { console.log(`loadPatient CALLED for IPP: ${ipp}`); const patientInfoContainer = document.getElementById("patientInfo"); patientInfoContainer.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Chargement...'; fetchWithAuth(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`).then(res => res.json()).then(data => { if (!data || !data.nom) { throw new Error("Patient non trouvé/invalide."); } patientInfoContainer.innerHTML = `<div class="info-group"> <div class="info-label">Nom</div> <div class="info-value">${data.prenom||'N/A'} ${data.nom||'N/A'}</div> </div><div class="info-group"> <div class="info-label">IPP</div> <div class="info-value">${data.ipp||'N/A'}</div> </div><div class="info-group"> <div class="info-label">CIN</div> <div class="info-value">${data.cin||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Téléphone</div> <div class="info-value">${data.telephone||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Adresse</div> <div class="info-value">${data.adresse||'N/A'}</div> </div><div class="info-group"> <div class="info-label">Mutuelle</div> <div class="info-value">${data.mutuelle||'Aucune'}</div> </div>`; }).catch(err => { if (!err.message.startsWith('Auth')) { patientInfoContainer.innerHTML = `<div class="message message-error" style="display:block; grid-column: 1 / -1;">❌ Erreur: ${err.message}</div>`; } console.error("Error loading patient data:", err); }); }
 
     // --- Audio Recording Functions ---
-    function startRecording() {
-        if (mediaRecorder && mediaRecorder.state === 'recording') return;
-        audioChunks = [];
-        const statusEl = document.getElementById("observationStatus");
-        statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Démarrage...'; statusEl.style.display = 'inline-flex';
-
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-                mediaRecorder.onstop = () => { // onstop handler
-                    if (audioChunks.length === 0) { console.warn("No audio recorded."); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-exclamation-circle"></i> Vide'; return; }
-                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                    document.getElementById("observationStatus").innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Transcription...';
-                    sendAudioToAI(blob); // Call send function
-                    audioChunks = []; // Clear chunks
-                };
-                mediaRecorder.onerror = (event) => { console.error(`Recorder Error: ${event.error}`); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-times-circle"></i> Erreur Rec.'; };
-                mediaRecorder.start();
-                statusEl.innerHTML = '<i class="fas fa-microphone-alt fa-beat"></i> Enregistrement...';
-                document.getElementById("startObservationBtn").disabled = true;
-            })
-            .catch(err => { statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur micro'; console.error("Mic Error:", err); alert("Erreur accès microphone: " + err.message); });
-    }
-
-    function stopRecording() {
-        if (mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); } // onstop handles UI update
-        document.getElementById("startObservationBtn").disabled = false; // Re-enable start button
-        // Optionally clear status immediately if desired, though onstop will update shortly
-        // document.getElementById("observationStatus").innerHTML = '';
-    }
+    function startRecording() { if (mediaRecorder && mediaRecorder.state === 'recording') return; audioChunks = []; const statusEl = document.getElementById("observationStatus"); statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Démarrage...'; statusEl.style.display = 'inline-flex'; navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => { mediaRecorder = new MediaRecorder(stream); mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); }; mediaRecorder.onstop = () => { if (audioChunks.length === 0) { console.warn("No audio."); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-exclamation-circle"></i> Vide'; return; } const blob = new Blob(audioChunks, { type: 'audio/webm' }); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Transcription...'; sendAudioToAI(blob); audioChunks = []; }; mediaRecorder.onerror = (e) => { console.error(`Rec Err: ${e.error}`); document.getElementById("observationStatus").innerHTML = '<i class="fas fa-times-circle"></i> Err Rec.'; }; mediaRecorder.start(); statusEl.innerHTML = '<i class="fas fa-microphone-alt fa-beat"></i> REC...'; document.getElementById("startObservationBtn").disabled = true; }).catch(err => { statusEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Err micro'; console.error("Mic Err:", err); alert("Err micro: " + err.message); }); }
+    function stopRecording() { if (mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); } document.getElementById("startObservationBtn").disabled = false; }
 
     // --- Send Audio Function ---
-    function sendAudioToAI(blob) {
-        const formData = new FormData(); formData.append("audio", blob, "observation.webm");
-        const statusEl = document.getElementById("observationStatus");
-        statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Envoi...';
-
-        fetchWithAuth(`${BASE_URL}/webhook/nurse-transcribe-observation`, { method: "POST", body: formData }) // Use fetchWithAuth, nurse endpoint
-            .then(res => res.json())
-            .then(data => {
-                let text = ''; if (Array.isArray(data) && data.length > 0) { text = data[0]?.transcript || data[0]?.text || ''; } else if (typeof data === 'object' && data !== null) { text = data.transcript || data.text || ''; }
-                if (!text) { console.warn("Transcription empty:", data); statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Vide'; return; }
-                document.getElementById("observationInput").value = text; statusEl.innerHTML = '<i class="fas fa-check"></i> Terminé';
-            })
-            .catch(err => { if (!err.message.startsWith('Auth')) { statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Erreur Transc.'; showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Erreur: ${err.message}`, "error");} console.error("Transcription error:", err); });
-    }
+    function sendAudioToAI(blob) { const formData = new FormData(); formData.append("audio", blob, "observation.webm"); const statusEl = document.getElementById("observationStatus"); statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Envoi...'; fetchWithAuth(`${BASE_URL}/webhook/nurse-transcribe-observation`, { method: "POST", body: formData }).then(res => res.json()).then(data => { let text = ''; if (Array.isArray(data) && data.length > 0) { text = data[0]?.transcript || data[0]?.text || ''; } else if (typeof data === 'object' && data !== null) { text = data.transcript || data.text || ''; } if (!text) { console.warn("Transc empty:", data); statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Vide'; return; } document.getElementById("observationInput").value = text; statusEl.innerHTML = '<i class="fas fa-check"></i> Terminé'; }).catch(err => { if (!err.message.startsWith('Auth')) { statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Err Transc.'; showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Err: ${err.message}`, "error");} console.error("Transc error:", err); }); }
 
     // --- Submit Observation Function ---
-    function submitObservation() {
-        const observation = document.getElementById("observationInput").value.trim();
-        if (!observation || !currentIPP) { showMessage("obsMessage", `Observation vide ${!currentIPP ? 'ou patient non sélectionné' : ''}.`, "warning"); return; }
-        showMessage("obsMessage", "", ""); // Clear message
+    function submitObservation() { const observation = document.getElementById("observationInput").value.trim(); if (!observation || !currentIPP) { showMessage("obsMessage", `Observation vide ${!currentIPP ? 'ou patient?' : ''}.`, "warning"); return; } showMessage("obsMessage", "", ""); fetchWithAuth(`${BASE_URL}/webhook/nurse-submit-observation`, { method: "POST", body: JSON.stringify({ ipp: currentIPP, observation }) }).then(response => response.ok ? response.json().catch(()=>({})) : response.text().then(text => { throw new Error(text||`Erreur ${response.status}`)}) ).then(() => { showMessage("obsMessage", "<i class='fas fa-check-circle'></i> Observation OK.", "success"); /* document.getElementById("observationInput").value = ''; */ }).catch(err => { if (!err.message.startsWith('Auth')) { showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Err: ${err.message}`, "error"); } console.error("Error saving obs:", err); }); }
 
-        fetchWithAuth(`${BASE_URL}/webhook/nurse-submit-observation`, { method: "POST", body: JSON.stringify({ ipp: currentIPP, observation }) }) // Use fetchWithAuth, nurse endpoint
-            .then(response => response.ok ? response.json().catch(()=>({})) : response.text().then(text => { throw new Error(text||`Erreur ${response.status}`)}) )
-            .then(() => { showMessage("obsMessage", "<i class='fas fa-check-circle'></i> Observation enregistrée.", "success"); console.log("Observation submission successful."); /* document.getElementById("observationInput").value = ''; */ })
-            .catch(err => { if (!err.message.startsWith('Auth')) { showMessage("obsMessage", `<i class='fas fa-exclamation-triangle'></i> Erreur: ${err.message}`, "error"); } console.error("Error saving observation:", err); });
+    // --- QR SCANNER CODE ---
+    const scanButton = document.getElementById('scanQrButton');
+    const scannerContainer = document.getElementById('scanner-container');
+    const video = document.getElementById('scanner-video');
+    const scanResultDiv = document.getElementById("scanResult");
+    let scanning = false; let currentStream = null; let scanTimeout = null;
+
+    function updateScanStatus(message, type = 'info') { const sInfo=showAlert.statusTypes?showAlert.statusTypes[type]:null||{icon:'fas fa-info-circle',cls:'message-info'}; scanResultDiv.className = `message message-${type}`; scanResultDiv.innerHTML = `<i class="${sInfo.icon} me-2"></i>${message}`; scanResultDiv.style.display = message ? 'block' : 'none'; }
+    showAlert.statusTypes={'info':{icon:'fas fa-info-circle',cls:'info'},'success':{icon:'fas fa-check-circle',cls:'success'},'warning':{icon:'fas fa-exclamation-triangle',cls:'warning'},'error':{icon:'fas fa-times-circle',cls:'error'},'loading':{icon:'fas fa-spinner fa-spin',cls:'info'}};
+
+    if (scanButton) { scanButton.onclick = async () => { if (!scanning) { try { updateScanStatus(''); scannerContainer.style.display = 'block'; updateScanStatus('Recherche caméra...', 'loading'); currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); video.srcObject = currentStream; await video.play(); updateScanStatus('Caméra prête. Scannez le code.', 'info'); scanButton.innerHTML = '<i class="fas fa-stop-circle"></i> Arrêter Scan'; scanButton.classList.replace('btn-primary','btn-danger'); scanning = true; clearTimeout(scanTimeout); scanTimeout = setTimeout(() => { if (scanning) { updateScanStatus('Aucun code détecté.', 'warning'); stopScanner(); } }, 30000); requestAnimationFrame(tick); } catch (err) { console.error("Cam Err:", err); updateScanStatus(`Err Cam: ${err.message}`, 'error'); stopScanner(); } } else { stopScanner(); updateScanStatus('Scan arrêté.', 'info'); } }; } else { console.warn("Scan button not found."); }
+    function stopScanner() { clearTimeout(scanTimeout); if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); } if(video) video.srcObject = null; if(scannerContainer) scannerContainer.style.display = 'none'; if(scanButton) {scanButton.innerHTML = '<i class="fas fa-qrcode"></i> Scanner QR'; scanButton.classList.replace('btn-danger','btn-primary');} scanning = false; currentStream = null; }
+    function tick() { if (!scanning || !video || video.videoWidth === 0 || video.readyState < 2) { if (scanning) requestAnimationFrame(tick); return; } const tce = document.createElement('canvas'); tce.height = video.videoHeight; tce.width = video.videoWidth; const tc = tce.getContext("2d",{willReadFrequently:true}); tc.drawImage(video, 0, 0, tce.width, tce.height); try { const id = tc.getImageData(0, 0, tce.width, tce.height); const code = window.jsQR(id.data, id.width, id.height, { inversionAttempts: "dontInvert" }); if (code) { console.log("QR Found:", code.data); stopScanner(); processScannedQrCode(code.data); } else { requestAnimationFrame(tick); } } catch (e) { console.error("Error during QR processing:", e); requestAnimationFrame(tick); /* Keep trying */ } }
+    function processScannedQrCode(scannedUrl) { clearTimeout(scanTimeout); updateScanStatus('Code détecté. Traitement...', 'loading'); try { const url = new URL(scannedUrl); if (scannedUrl.startsWith(QR_TARGET_BASE_URL)) { const ippFromQr = url.searchParams.get('ipp'); if (ippFromQr) { updateScanStatus(`Patient IPP ${ippFromQr} trouvé. Chargement...`, 'success'); loadPatientIntoCurrentDashboard(ippFromQr); } else { updateScanStatus('Erreur: IPP manquant.', 'error'); } } else { updateScanStatus('Erreur: QR Code non reconnu.', 'error'); } } catch (e) { updateScanStatus(`Erreur: Format QR invalide (${e.message}).`, 'error'); } }
+
+    function loadPatientIntoCurrentDashboard(scannedIpp) {
+        console.log(`Loading patient ${scannedIpp} into Nurse dashboard via QR`);
+        currentIPP = scannedIpp; // Update global IPP
+        // Update URL (optional)
+        try { const newUrl = new URL(window.location); newUrl.searchParams.set('ipp', scannedIpp); window.history.pushState({ ipp: scannedIpp }, '', newUrl); } catch(e) { console.error("History API err:", e); }
+
+        // Call main load patient function for this IPP
+        loadPatient(scannedIpp);
+
+        // Clear observation field for new patient
+        const observationInput = document.getElementById('observationInput');
+        if (observationInput) observationInput.value = '';
+        showMessage('obsMessage', '', ''); // Clear any previous submit messages
+
+        // Clear scan message after delay
+        setTimeout(() => { updateScanStatus(''); }, 4000);
+        // Scroll to patient info section
+        document.getElementById('patientInfo')?.parentElement?.parentElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+    // --- END QR SCANNER CODE ---
 
-     // --- Show Message Function ---
-     function showMessage(elementId, message, type) { const messageElement = document.getElementById(elementId); if (!messageElement) { console.error(`Msg Elem "${elementId}" not found.`); return; } messageElement.innerHTML = message || ""; messageElement.style.display = message ? "block" : "none"; messageElement.className = "message"; if (type === "success") messageElement.classList.add("message-success"); else if (type === "warning") messageElement.classList.add("message-warning"); else if (type === "error") messageElement.classList.add("message-error"); if (type === "success" && message) { setTimeout(() => { if (messageElement.classList.contains("message-success") && messageElement.innerHTML === message) { messageElement.style.display = "none"; } }, 5000); } }
+    // --- window.onload (MODIFIED) ---
+    window.onload = () => {
+      if (!localStorage.getItem('authToken')) { console.log("Nurse Dash: No auth token..."); window.location.href = LOGIN_PAGE_URL; return; }
+       document.body.classList.add('loaded'); console.log("Nurse auth OK.");
+
+       const urlParams = new URLSearchParams(window.location.search);
+       const ippFromUrl = urlParams.get("ipp");
+
+       if (ippFromUrl) { // Load patient if IPP is in URL
+           console.log(`IPP in URL: ${ippFromUrl}. Loading initial data.`);
+           currentIPP = ippFromUrl;
+           loadPatient(currentIPP); // Load data for this IPP
+       } else { // No IPP in URL, show empty state
+           console.log("No initial IPP. Waiting scan.");
+           document.getElementById('patientInfo').innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-qrcode"></i><div class="empty-state-message">Prêt à scanner</div><div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div></div>';
+           // Ensure observation section is usable but maybe indicate no patient?
+            // Or disable submit button until patient loaded?
+            // document.querySelector('button[onclick="submitObservation()"]').disabled = true;
+       }
+       // Attach listeners regardless of initial IPP
+       // (No specific listeners here other than button clicks already defined)
+    };
+
   </script>
 </body>
 </html>
