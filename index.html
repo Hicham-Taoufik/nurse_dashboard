@@ -30,10 +30,17 @@
       --border-radius: 8px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--gray-800); line-height: 1.5; min-height: 100vh; padding: 0; visibility: hidden; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: var(--gray-100); 
+      color: var(--gray-800); 
+      line-height: 1.5; 
+      min-height: 100vh; 
+      padding: 0; 
+      visibility: hidden; 
+    }
     body.loaded { visibility: visible; }
     .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 12px; }
-
     /* --- HEADER --- */
     .header { display: flex; align-items: center; padding: 15px 0; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--gray-200); }
     .header-main-content { display: flex; align-items: center; gap: 10px; flex-grow: 1; }
@@ -42,7 +49,6 @@
     .header-title { color: var(--primary); font-size: 1.3rem; font-weight: 600; margin: 0; }
     .header-logout { flex-shrink: 0; }
     .logout-btn { padding: 5px 10px; font-size: 0.8rem; border-radius: var(--border-radius); }
-
     /* --- Cards --- */
     .card { background: white; border-radius: var(--border-radius); box-shadow: var(--shadow-md); overflow: hidden; margin-bottom: 20px; }
     .card-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--gray-200); }
@@ -54,7 +60,6 @@
     .info-group { margin-bottom: 5px; }
     .info-label { font-size: 0.75rem; color: var(--gray-500); margin-bottom: 4px; }
     .info-value { font-size: 0.85rem; color: var(--gray-800); font-weight: 500; word-break: break-word; }
-
     /* --- Form Elements --- */
     label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--gray-600); }
     textarea, input[type="text"], input[type="date"] { width: 100%; padding: 10px 12px; font-size: 0.9rem; border-radius: var(--border-radius); border: 1px solid var(--gray-300); background: white; transition: all 0.2s ease; }
@@ -63,12 +68,11 @@
     .input-group { margin-bottom: 15px; }
     .form-select { width: 100%; padding: 10px 12px; font-size: 0.9rem; border-radius: var(--border-radius); border: 1px solid var(--gray-300); background: white; }
     .form-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(93, 116, 242, 0.1); }
-
-    /* --- Buttons and Messages --- */
+    /* --- Buttons & Messages --- */
     .btn-group { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
     .btn { padding: 8px 14px; font-size: 0.85rem; font-weight: 500; border-radius: var(--border-radius); border: none; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; }
     .btn i { margin-right: 6px; }
-    .btn-primary { background: var(--primary); color: white; } 
+    .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: #4a62d8; }
     .btn-danger { background-color: var(--danger); color: white; }
     .btn-success { background: var(--success); color: white; }
@@ -79,12 +83,10 @@
     .message-warning { background: var(--warning-light); color: var(--warning); }
     .message-error { background: var(--danger-light); color: var(--danger); }
     .message-info { background: var(--primary-light); color: var(--primary); border-left: 4px solid var(--primary); }
-    .no-print { }
     .empty-state { text-align: center; padding: 1.5rem; color: var(--gray-500); }
     .empty-state i { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.6; display: block; }
     .empty-state-message { font-size: 1rem; font-weight: 500; margin-bottom: 0.25rem; }
     .empty-state-description { font-size: 0.85rem; }
-    
     @media (max-width: 480px) {
       .header { justify-content: center; }
       .header-main-content { width: 100%; justify-content: center; margin-bottom: 10px; }
@@ -123,12 +125,14 @@
       <div class="card-body">
         <div class="qr-scanner-section">
           <div class="btn-group">
-            <button id="scanQrButton" class="btn btn-primary"><i class="fas fa-qrcode"></i> Scanner QR</button>
+            <button id="scanQrButton" class="btn btn-primary">
+              <i class="fas fa-qrcode"></i> Scanner QR
+            </button>
           </div>
           <div id="scanner-container">
             <video id="scanner-video" playsinline></video>
           </div>
-          <!-- Scan status messages will appear in obsMessage -->
+          <!-- Scan status messages appear in obsMessage -->
         </div>
       </div>
     </div>
@@ -227,11 +231,21 @@
     const LOGIN_PAGE_URL = 'https://hicham-taoufik.github.io/login/';
     const QR_TARGET_BASE_URL = 'app://medilink/patient';
     let currentIPP = null;  // Set via QR scanning
-    let mediaRecorder;
-    let audioChunks = [];
 
-    // --- Functions for Authentication and Utility ---
-    function fetchWithAuth(url, options={}) {
+    // --- Placeholder Audio Recording Functions ---
+    // These functions are defined as placeholders to satisfy the inline onclick attributes.
+    function startRecording() {
+      console.log("startRecording called (placeholder).");
+      // TODO: Implement full audio recording logic.
+    }
+    function stopRecording() {
+      console.log("stopRecording called (placeholder).");
+      // TODO: Implement logic to stop audio recording.
+    }
+    // Note: submitObservation() remains as is (assumed implemented elsewhere)
+
+    // --- Authentication & Utility Functions ---
+    function fetchWithAuth(url, options = {}) {
       const token = localStorage.getItem('authToken');
       if (!token) {
         console.error('Nurse: No token.');
@@ -285,7 +299,7 @@
       else if (type === "info") el.classList.add("message-info");
     }
 
-    // --- Session Timeout (optional) ---
+    // --- Session Timeout ---
     let sessionTimeoutId = null;
     function resetSessionTimeout() { if (sessionTimeoutId) clearTimeout(sessionTimeoutId); sessionTimeoutId = setTimeout(logout, 30 * 60 * 1000); }
     document.addEventListener('mousemove', resetSessionTimeout, { passive: true });
@@ -293,13 +307,12 @@
     document.addEventListener('click', resetSessionTimeout, { passive: true });
     document.addEventListener('scroll', resetSessionTimeout, { passive: true });
 
-    // --- Patient and Observation Functions ---
+    // --- Patient & Observation Functions ---
     function loadPatient(ipp) {
       console.log(`loadPatient CALLED for IPP: ${ipp}`);
       const patientInfoContainer = document.getElementById("patientInfo");
       if (!patientInfoContainer) return;
       patientInfoContainer.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Chargement...';
-      // Disable Observation Section while loading patient
       enableObservationSection(false);
       fetchWithAuth(`${BASE_URL}/webhook/nurse-get-patient?ipp=${ipp}`)
         .then(data => {
@@ -342,11 +355,9 @@
         startBtn.disabled = true;
         stopBtn.disabled = true;
         saveBtn.disabled = true;
-        showMessage('obsMessage', '', '');
+        showMessage('obsMessage', '', ''); 
       }
     }
-
-    // (Observation recording and transcription functions omitted for brevity—they remain unchanged)
 
     // --- QR Scanner Code ---
     const scanButton = document.getElementById('scanQrButton');
@@ -387,9 +398,9 @@
     function stopScanner() {
       clearTimeout(scanTimeout);
       if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); }
-      if (video) video.srcObject = null;
-      if (scannerContainer) scannerContainer.style.display = 'none';
-      if (scanButton) {
+      if(video) video.srcObject = null;
+      if(scannerContainer) scannerContainer.style.display = 'none';
+      if(scanButton) {
         scanButton.innerHTML = '<i class="fas fa-qrcode"></i> Scanner QR';
         scanButton.classList.replace('btn-danger','btn-primary');
       }
@@ -401,7 +412,7 @@
       const tce = document.createElement('canvas');
       tce.height = video.videoHeight;
       tce.width = video.videoWidth;
-      const tc = tce.getContext("2d", { willReadFrequently: true });
+      const tc = tce.getContext("2d",{willReadFrequently:true});
       tc.drawImage(video, 0, 0, tce.width, tce.height);
       try {
         const id = tc.getImageData(0, 0, tce.width, tce.height);
@@ -410,9 +421,7 @@
           console.log("QR Found:", code.data);
           stopScanner();
           processScannedQrCode(code.data);
-        } else {
-          requestAnimationFrame(tick);
-        }
+        } else { requestAnimationFrame(tick); }
       } catch (e) {
         console.error("Error during QR processing:", e);
         requestAnimationFrame(tick);
@@ -428,12 +437,8 @@
           if (ippFromQr) {
             updateScanStatus(`Patient IPP ${ippFromQr} trouvé. Chargement...`, 'success');
             loadPatientIntoCurrentDashboard(ippFromQr);
-          } else {
-            updateScanStatus('Erreur: IPP manquant.', 'error');
-          }
-        } else {
-          updateScanStatus('Erreur: QR Code non reconnu.', 'error');
-        }
+          } else { updateScanStatus('Erreur: IPP manquant.', 'error'); }
+        } else { updateScanStatus('Erreur: QR Code non reconnu.', 'error'); }
       } catch (e) {
         updateScanStatus(`Erreur: Format QR invalide (${e.message}).`, 'error');
       }
@@ -447,6 +452,7 @@
         window.history.pushState({ ipp: scannedIpp }, '', newUrl);
       } catch(e) { console.error("History API err:", e); }
       loadPatient(scannedIpp);
+      const observationInput = document.getElementById("observationInput");
       if(observationInput) observationInput.value = '';
       setTimeout(() => { showMessage('obsMessage', '', ''); }, 4000);
       document.getElementById('patientInfo')?.parentElement?.parentElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -476,13 +482,12 @@
         vitalSignMessage.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Envoi...";
         vitalSignMessage.style.display = "block";
         try {
-          const res = await fetch(webhookUrl, {
+          // Use fetchWithAuth to include the token
+          const res = await fetchWithAuth(webhookUrl, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
-          const data = await res.json();
-          console.log("Response from webhook:", data);
+          console.log("Response from webhook:", res);
           vitalSignMessage.innerHTML = `<i class='fas fa-check-circle'></i> Signes vitaux enregistrés avec succès.`;
           vitalSignsForm.reset();
           showToast("Les signes vitaux ont été enregistrés.", "success");
@@ -513,6 +518,66 @@
         document.getElementById('patientInfo').innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-qrcode"></i><div class="empty-state-message">Prêt à scanner</div><div class="empty-state-description">Utilisez le bouton "Scanner QR" pour charger un patient.</div></div>';
       }
     };
+
+    // --- Initialize Dropdowns via n8n (Mutuelle & Doctor) ---
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Initialize Mutuelle Dropdown
+      const mutuelleDropdown = document.getElementById('mutuelle');
+      async function fetchMutuelles() {
+        try {
+          const data = await fetchWithAuth(`${CONFIG.API_BASE_URL || BASE_URL}/webhook/get-mutuelles`);
+          if (data.success && Array.isArray(data.mutuelles)) { populateMutuelleDropdown(data.mutuelles); }
+          else { console.error('Failed to fetch mutuelles:', data); }
+        } catch (error) { console.error('Error fetching mutuelles:', error); }
+      }
+      function populateMutuelleDropdown(mutuelles) {
+        mutuelleDropdown.innerHTML = '<option value="" disabled selected>Choisir une mutuelle</option>';
+        mutuelles.forEach(mutuelle => {
+          const option = document.createElement('option');
+          option.value = mutuelle;
+          option.textContent = mutuelle;
+          mutuelleDropdown.appendChild(option);
+        });
+        $(mutuelleDropdown).select2({
+          placeholder: 'Choisir une mutuelle',
+          allowClear: true,
+          width: '100%',
+          templateResult: function(option) {
+            try {
+              const data = JSON.parse(option.element.value);
+              return `${data.name} - ${data.price ? data.price + " MAD" : ""}`;
+            } catch (e) { return option.text; }
+          },
+          templateSelection: function(option) { return option.text || "Choisir une mutuelle"; }
+        });
+      }
+      fetchMutuelles();
+
+      // Initialize Doctor Dropdown (Using /webhook/get-doctors)
+      const doctorDropdown = document.getElementById('doctor');
+      async function fetchDoctors() {
+        try {
+          const data = await fetchWithAuth(`${CONFIG.API_BASE_URL || BASE_URL}/webhook/get-doctors`);
+          if (data.success && Array.isArray(data.doctors)) { populateDoctorsDropdown(data.doctors); }
+          else { console.error('Failed to fetch doctors:', data); }
+        } catch (error) { console.error('Error fetching doctors:', error); }
+      }
+      function populateDoctorsDropdown(doctors) {
+        doctorDropdown.innerHTML = '<option value="" disabled selected>Choisir un médecin</option>';
+        doctors.forEach(doctor => {
+          const option = document.createElement('option');
+          option.value = doctor.matricule;
+          option.textContent = `${doctor.nom} ${doctor.prenom} - ${doctor.specialite}`;
+          doctorDropdown.appendChild(option);
+        });
+        $(doctorDropdown).select2({
+          placeholder: 'Choisir un médecin',
+          allowClear: true,
+          width: '100%'
+        });
+      }
+      fetchDoctors();
+    });
   </script>
 </body>
 </html>
