@@ -232,17 +232,46 @@
     const QR_TARGET_BASE_URL = 'app://medilink/patient';
     let currentIPP = null;  // Set via QR scanning
 
-    // --- Placeholder Audio Recording Functions ---
-    // These functions are defined as placeholders to satisfy the inline onclick attributes.
+    // --- Audio Recording Implementation using MediaRecorder ---
+    let mediaRecorder; 
+    let audioChunks = [];
     function startRecording() {
-      console.log("startRecording called (placeholder).");
-      // TODO: Implement full audio recording logic.
+      // Request microphone access and start recording
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          mediaRecorder = new MediaRecorder(stream);
+          audioChunks = [];
+          mediaRecorder.ondataavailable = event => {
+            if (event.data.size > 0) {
+              audioChunks.push(event.data);
+            }
+          };
+          mediaRecorder.onstop = () => {
+            // Combine audio chunks into a Blob when recording stops.
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            console.log("Recording stopped. Audio blob size:", audioBlob.size);
+            // Here you could send the audioBlob to a transcription service:
+            // sendAudioToTranscription(audioBlob);
+          };
+          mediaRecorder.start();
+          console.log("Recording started.");
+          // Optionally update UI (e.g., disable start button, enable stop button)
+        })
+        .catch(err => {
+          console.error("Error accessing microphone:", err);
+          alert("Erreur d'accès au micro: " + err.message);
+        });
     }
     function stopRecording() {
-      console.log("stopRecording called (placeholder).");
-      // TODO: Implement logic to stop audio recording.
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        console.log("Recording stopped.");
+      } else {
+        console.log("Aucun enregistrement en cours.");
+      }
     }
-    // Note: submitObservation() remains as is (assumed implemented elsewhere)
+    // Note: If you have a submitObservation() function, it should use the recorded audio,
+    // for example by sending the Blob to your backend for transcription.
 
     // --- Authentication & Utility Functions ---
     function fetchWithAuth(url, options = {}) {
@@ -298,7 +327,6 @@
       else if (type === "error") el.classList.add("message-error");
       else if (type === "info") el.classList.add("message-info");
     }
-
     // --- Session Timeout ---
     let sessionTimeoutId = null;
     function resetSessionTimeout() { if (sessionTimeoutId) clearTimeout(sessionTimeoutId); sessionTimeoutId = setTimeout(logout, 30 * 60 * 1000); }
@@ -398,9 +426,9 @@
     function stopScanner() {
       clearTimeout(scanTimeout);
       if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); }
-      if(video) video.srcObject = null;
-      if(scannerContainer) scannerContainer.style.display = 'none';
-      if(scanButton) {
+      if (video) video.srcObject = null;
+      if (scannerContainer) scannerContainer.style.display = 'none';
+      if (scanButton) {
         scanButton.innerHTML = '<i class="fas fa-qrcode"></i> Scanner QR';
         scanButton.classList.replace('btn-danger','btn-primary');
       }
@@ -439,9 +467,7 @@
             loadPatientIntoCurrentDashboard(ippFromQr);
           } else { updateScanStatus('Erreur: IPP manquant.', 'error'); }
         } else { updateScanStatus('Erreur: QR Code non reconnu.', 'error'); }
-      } catch (e) {
-        updateScanStatus(`Erreur: Format QR invalide (${e.message}).`, 'error');
-      }
+      } catch (e) { updateScanStatus(`Erreur: Format QR invalide (${e.message}).`, 'error'); }
     }
     function loadPatientIntoCurrentDashboard(scannedIpp) {
       console.log(`Loading patient ${scannedIpp} into Nurse dashboard via QR`);
@@ -453,7 +479,7 @@
       } catch(e) { console.error("History API err:", e); }
       loadPatient(scannedIpp);
       const observationInput = document.getElementById("observationInput");
-      if(observationInput) observationInput.value = '';
+      if (observationInput) observationInput.value = '';
       setTimeout(() => { showMessage('obsMessage', '', ''); }, 4000);
       document.getElementById('patientInfo')?.parentElement?.parentElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -476,13 +502,12 @@
           tension_diastolic: parseInt(document.getElementById('tensionDiastolic').value),
           spo2: parseInt(document.getElementById('spo2').value),
           heart_rate: parseInt(document.getElementById('heartRate').value),
-          recorded_by_user_id: 123  // Replace with the actual nurse's user ID if available
+          recorded_by_user_id: 123
         };
         const webhookUrl = `${BASE_URL}/webhook/vital-signs`;
         vitalSignMessage.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Envoi...";
         vitalSignMessage.style.display = "block";
         try {
-          // Use fetchWithAuth to include the token
           const res = await fetchWithAuth(webhookUrl, {
             method: "POST",
             body: JSON.stringify(payload)
@@ -525,7 +550,7 @@
       const mutuelleDropdown = document.getElementById('mutuelle');
       async function fetchMutuelles() {
         try {
-          const data = await fetchWithAuth(`${CONFIG.API_BASE_URL || BASE_URL}/webhook/get-mutuelles`);
+          const data = await fetchWithAuth(`${BASE_URL}/webhook/get-mutuelles`);
           if (data.success && Array.isArray(data.mutuelles)) { populateMutuelleDropdown(data.mutuelles); }
           else { console.error('Failed to fetch mutuelles:', data); }
         } catch (error) { console.error('Error fetching mutuelles:', error); }
@@ -557,7 +582,7 @@
       const doctorDropdown = document.getElementById('doctor');
       async function fetchDoctors() {
         try {
-          const data = await fetchWithAuth(`${CONFIG.API_BASE_URL || BASE_URL}/webhook/get-doctors`);
+          const data = await fetchWithAuth(`${BASE_URL}/webhook/get-doctors`);
           if (data.success && Array.isArray(data.doctors)) { populateDoctorsDropdown(data.doctors); }
           else { console.error('Failed to fetch doctors:', data); }
         } catch (error) { console.error('Error fetching doctors:', error); }
