@@ -477,7 +477,7 @@
                 currentVisitId = null;
                 const patientData = responseData.patientData;
                  patientInfoContainer.innerHTML = `
-                     <div class="info-group"><div class="info-label">Nom & Prénom</div><div class="info-value">${sanitizeInput(patientData.prenom)} ${sanitizeInput(patientData.nom)}</div></div>
+                     <div class="info-group"><div class="info-label">Nom & Prénom</div><div class="info-value">${sanitizeInput(patientData.firstname)} ${sanitizeInput(patientData.lastname)}</div></div>
                      <div class="info-group"><div class="info-label">IPP</div><div class="info-value">${sanitizeInput(currentIPP)}</div></div>
                      <div class="info-group"><div class="info-label">Visite Active</div><div class="info-value" style="color: var(--warning); font-weight: bold;">AUCUNE</div></div>
                      <div class="info-group"><div class="info-label">address</div><div class="info-value">${sanitizeInput(patientData.address || 'N/A')}</div></div>
