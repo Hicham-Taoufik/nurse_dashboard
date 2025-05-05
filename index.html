@@ -489,7 +489,7 @@
                 // --- Success Case: Patient and Active Visit Found ---
                 const patientData = responseData.patientData;
                 currentIPP = patientData.ipp;
-                currentVisitId = responseData.visitId; // <<<< STORE VISIT ID
+                currentVisitId = responseData.visitId.visitGuid; // <<<< STORE VISIT ID
                 const nurseObs = responseData.nurseObservations || {}; // Get nurse obs if endpoint provides it
                 const vitals = responseData.vitalSigns || {};         // Get latest vitals if endpoint provides it
 
