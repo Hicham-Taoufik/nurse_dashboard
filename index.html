@@ -460,13 +460,13 @@
                     const patientData = responseData.patientData;
                     // Display patient info but indicate no active visit
                     patientInfoContainer.innerHTML = `
-                      <div class="info-group"><div class="info-label">Nom & Prénom</div><div class="info-value">${sanitizeInput(patientData.prenom)} ${sanitizeInput(patientData.nom)}</div></div>
+                      <div class="info-group"><div class="info-label">Nom & Prénom</div><div class="info-value">${sanitizeInput(patientData.firstname)} ${sanitizeInput(patientData.lastname)}</div></div>
                       <div class="info-group"><div class="info-label">IPP</div><div class="info-value">${sanitizeInput(currentIPP)}</div></div>
                       <div class="info-group"><div class="info-label">Visite Active</div><div class="info-value" style="color: var(--warning); font-weight: bold;">AUCUNE</div></div>
                       <div class="info-group"><div class="info-label">CIN</div><div class="info-value">${sanitizeInput(patientData.cin || 'N/A')}</div></div>
                       </div>`; // Truncated for brevity
                     enableUISections(false); // Keep UI disabled
-                    showMessage('obsMessage', `Patient ${patientData.prenom} ${patientData.nom} chargé, mais aucune visite active trouvée. Démarrage par Réception requis.`, 'warning');
+                    showMessage('obsMessage', `Patient ${patientData.firstname} ${patientData.lastname} chargé, mais aucune visite active trouvée. Démarrage par Réception requis.`, 'warning');
                } else {
                    // Patient genuinely not found
                    throw new Error(responseData.message || "Patient introuvable.");
@@ -480,10 +480,10 @@
                      <div class="info-group"><div class="info-label">Nom & Prénom</div><div class="info-value">${sanitizeInput(patientData.prenom)} ${sanitizeInput(patientData.nom)}</div></div>
                      <div class="info-group"><div class="info-label">IPP</div><div class="info-value">${sanitizeInput(currentIPP)}</div></div>
                      <div class="info-group"><div class="info-label">Visite Active</div><div class="info-value" style="color: var(--warning); font-weight: bold;">AUCUNE</div></div>
-                     <div class="info-group"><div class="info-label">CIN</div><div class="info-value">${sanitizeInput(patientData.cin || 'N/A')}</div></div>
+                     <div class="info-group"><div class="info-label">address</div><div class="info-value">${sanitizeInput(patientData.address || 'N/A')}</div></div>
                      </div>`; // Truncated
                 enableUISections(false); // Keep UI disabled
-                showMessage('obsMessage', `Patient ${patientData.prenom} ${patientData.nom} chargé, mais aucune visite active trouvée. Démarrage par Réception requis.`, 'warning');
+                showMessage('obsMessage', `Patient ${patientData.firstname} ${patientData.lastname} chargé, mais aucune visite active trouvée. Démarrage par Réception requis.`, 'warning');
             }
              else {
                 // --- Success Case: Patient and Active Visit Found ---
@@ -497,12 +497,12 @@
 
                 // Populate Patient Info Card
                 patientInfoContainer.innerHTML = `
-                  <div class="info-group"><div class="info-label">Nom & Prénom</div><div class="info-value">${sanitizeInput(patientData.prenom)} ${sanitizeInput(patientData.nom)}</div></div>
+                  <div class="info-group"><div class="info-label">Nom & Prénom</div><div class="info-value">${sanitizeInput(patientData.firstname)} ${sanitizeInput(patientData.lastname)}</div></div>
                   <div class="info-group"><div class="info-label">IPP</div><div class="info-value">${sanitizeInput(currentIPP)}</div></div>
                   <div class="info-group"><div class="info-label">Visite ID</div><div class="info-value" style="font-weight: bold;">${sanitizeInput(currentVisitId)}</div></div>
-                  <div class="info-group"><div class="info-label">CIN</div><div class="info-value">${sanitizeInput(patientData.cin || 'N/A')}</div></div>
-                  <div class="info-group"><div class="info-label">Téléphone</div><div class="info-value">${sanitizeInput(patientData.telephone || 'N/A')}</div></div>
-                  <div class="info-group"><div class="info-label">Mutuelle</div><div class="info-value">${sanitizeInput(patientData.mutuelle || 'Aucune')}</div></div>
+                  <div class="info-group"><div class="info-label">address</div><div class="info-value">${sanitizeInput(patientData.address || 'N/A')}</div></div>
+                  <div class="info-group"><div class="info-label">Téléphone</div><div class="info-value">${sanitizeInput(patientData.phonenumber || 'N/A')}</div></div>
+                  <div class="info-group"><div class="info-label">Mutuelle</div><div class="info-value">${sanitizeInput(patientData.insurancename || 'Aucune')}</div></div>
                 `;
 
                 // Pre-fill forms (Only if your GET_PATIENT_VISIT_ENDPOINT actually returns obs/vitals)
@@ -514,7 +514,7 @@
                 if (heartRateInput && vitals.heart_rate !== null && vitals.heart_rate !== undefined) heartRateInput.value = vitals.heart_rate;
 
                 enableUISections(true); // Enable input sections
-                showMessage('obsMessage', `Patient ${patientData.prenom} ${patientData.nom} chargé (Visite ID: ${currentVisitId}). Prêt pour saisie.`, 'success');
+                showMessage('obsMessage', `Patient ${patientData.firstname} ${patientData.lastname} chargé (Visite ID: ${currentVisitId}). Prêt pour saisie.`, 'success');
             }
           })
           .catch(err => {
